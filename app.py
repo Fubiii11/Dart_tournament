@@ -76,10 +76,18 @@ def toggle_presence(id):
         return "We could not set this player to ready"
 
     
-@app.route("/start_game", methods=["GET"])
+@app.route("/start_game", methods=["GET","POST"])
 def start_game():
+    numbers = []
     present_players = Dart.query.filter_by(present=True).count()
-    return render_template("start_game.html",present_players=present_players)
+
+    #find all valid divisors of present_players (ignoring 0)
+    for i in range(2, present_players):
+        if present_players % i == 0:
+            numbers.append(i)
+    
+    return render_template("start_game.html",present_players=present_players, numbers = numbers)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

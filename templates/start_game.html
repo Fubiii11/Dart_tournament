@@ -8,11 +8,13 @@
 </head>
 <body>
     <h1 class="title">Select Number of Groups</h1>
-    <ul class="list">
-        <li><a href="/game/2">2 Groups</a></li>
-        <li><a href="/game/4">4 Groups</a></li>
-        <li><a href="/game/9">9 Groups</a></li>
-    </ul>
+    <p class ="center_text">Amount of players: {{present_players}}</p>
+    <p class="list">
+        <!-- Loop trough the numbers and display them-->
+        {% for number in numbers %}
+        <a href="/game/{{number}}">{{number}} Groups à {{ (present_players / number) | int }} players</a><br>
+        {% endfor %}
+    </p>
         <!-- Button to go back to the main page-->
          <form action="{{ url_for('index') }}" method="GET" class="start_game">
             <input type="submit" value="Return">          

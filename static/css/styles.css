@@ -143,6 +143,11 @@ th, td {
     font-size: 1vw;"
 }
 
-.little{
+.little_undertitle{
     text-align: center;
+}
+
+.list{
+    text-align: center;
+    
 }
