@@ -12,7 +12,10 @@
         <li><a href="/game/2">2 Groups</a></li>
         <li><a href="/game/4">4 Groups</a></li>
         <li><a href="/game/9">9 Groups</a></li>
-        <!-- Add more options as needed -->
+        <!-- Button to go back to the main page-->
+         <form action="{{ url_for('index') }}" method="GET">
+            <input type="submit" value="Return" class="start_game">          
+         </form>
     </ul>
 </body>
 </html>

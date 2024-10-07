@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dart Tournament</title>
+    <script>
+        // Save the scroll position when the page is unloaded (i.e., before reloading)
+        window.onbeforeunload = function() {
+            localStorage.setItem('scrollPosition', window.scrollY);
+        };
+        
+        // Restore the scroll position when the page is loaded
+        window.onload = function() {
+            const scrollPosition = localStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, scrollPosition);  // Scroll to the saved position
+                localStorage.removeItem('scrollPosition');  // Clear the scroll position after restoring
+            }
+        };
+        </script>
 </head>
 <body>
     <div class="content">
@@ -47,6 +62,8 @@
          </table>
     </div>
 
+    <!-- Add anchor above the input form-->
+     <a name="bottom"></a>
     <!-- Add player form -->
     <form action="/" method="POST" class="input_field">
         <input type="text" name="player" id="player" placeholder="Enter player name" required>

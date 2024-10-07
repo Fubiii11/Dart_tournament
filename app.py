@@ -35,7 +35,7 @@ def index():
         try:
             db.session.add(new_player)
             db.session.commit()
-            return redirect("/")
+            return redirect("/#bottom")
         
         except:
             return "There was an issue adding this player"
@@ -78,7 +78,8 @@ def toggle_presence(id):
     
 @app.route("/start_game", methods=["GET"])
 def start_game():
-    return render_template("start_game.html")
+    present_players = Dart.query.filter_by(present=True).count()
+    return render_template("start_game.html",present_players=present_players)
 
 if __name__ == '__main__':
     app.run(debug=True)
