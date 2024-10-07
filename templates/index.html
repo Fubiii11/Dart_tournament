@@ -7,9 +7,38 @@
     <title>Dart Tournament</title>
 </head>
 <body>
-    <h1 class="title">Dart Tournament</h1>
-    <p class="center_text">Add or remove players</p>    
+    <div class="content">
+        <h1 class="title">Dart Tournament</h1>
+        <p class="center_text">Add or remove players</p>  
 
+        <!-- Player table -->
+         <table class="player_table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Player Name</th>
+                    <th>Date Added</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through all players in the database and diplay them-->
+                 {% for player in players %}
+                 <tr>
+                    <td>{{ player.id }}</td>
+                    <td>{{ player.player }}</td>
+                    <td>{{ player.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                 </tr>
+                 {% endfor %}
+            </tbody>
+         </table>
+
+    </div>
+
+    <!-- Add player form -->
+    <form action="/" method="POST" style="margin-top: 20px;">
+        <input type="text" name="player" id="player" placeholder="Enter player name" required>
+        <input type="submit" value="Add Player">
+    </form>
 
 
 </body>

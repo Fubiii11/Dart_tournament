@@ -13,17 +13,29 @@ class Dart(db.Model):
 
     def __repr__(self):
         return "<Player %r>" % self.player
-    
-with app.app_context():
-    db.create_all()
 
-# Store the list of players in memory (eventually, you can store this in a database)
-players = []
+# This was to initially create the database    
+#with app.app_context():
+#    db.create_all()
 
 # Home page route
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template("index.html")
+    if request.method == "POST":
+        player_content = request.form["player"]
+        new_player = Dart(player=player_content)
+
+        try:
+            db.session.add(new_player)
+            db.session.commit()
+            return redirect("/")
+        
+        except:
+            return "There was an issue adding this player"
+
+    else:
+        players = Dart.query.order_by(Dart.date_created).all()
+        return render_template("index.html", players=players)
 
 if __name__ == '__main__':
     app.run(debug=True)
