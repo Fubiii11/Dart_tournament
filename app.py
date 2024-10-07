@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
@@ -10,13 +11,19 @@ class Dart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     player = db.Column(db.String(200), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    present = db.Column(db.Boolean,default=False)
 
     def __repr__(self):
         return "<Player %r>" % self.player
+    
+# Function to convert UTC to Zurich time
+def convert_utc_to_zurich(utc_dt):
+    zurich_tz = pytz.timezone('Europe/Zurich')  # Define the Zurich timezone
+    return utc_dt.replace(tzinfo=pytz.utc).astimezone(zurich_tz)  # Convert to Zurich timezone
 
 # This was to initially create the database    
 #with app.app_context():
-#    db.create_all()
+    #db.create_all()
 
 # Home page route
 @app.route('/', methods=['GET', 'POST'])
@@ -35,6 +42,8 @@ def index():
 
     else:
         players = Dart.query.order_by(Dart.date_created).all()
+        for player in players:
+            player.date_created = convert_utc_to_zurich(player.date_created)
         return render_template("index.html", players=players)
     
 @app.route("/delete/<int:id>", methods=["POST"])
@@ -47,6 +56,21 @@ def delete_player(id):
         return redirect("/")
     except:
         return "There was a problem deleting this player"
+    
+@app.route("/toggle_presence/<int:id>", methods=["POST"])
+def toggle_presence(id):
+    player = Dart.query.get_or_404(id)
+    try:
+        player.present = not player.present
+        db.session.commit()
+        return redirect("/")
+    except:
+        return "We could not set this player to ready"
+
+    
+@app.route("/start_game", methods=["GET"])
+def start_game():
+    return render_template("start_game.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -15,18 +15,27 @@
          <table class="player_table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Player Name</th>
-                    <th>Date Added</th>
+                    <th>Added</th>
+                    <th>present</th>
+                    <th>Remove</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Loop through all players in the database and diplay them-->
                  {% for player in players %}
                  <tr class="player_row">
-                    <td>{{ player.id }}</td>
                     <td>{{ player.player }}</td>
-                    <td>{{ player.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ player.date_created.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                    <td>
+                        <form action="/toggle_presence/{{ player.id }}" method="POST" style="display: inline;">
+                            <input type="submit" class="present_status" 
+                                    style="background-color: {{ 'green' if player.present else '#AF3E4D' }};"
+                                    value="{{ 'Present' if player.present else 'Absent' }}">
+                                
+                            </input>
+                        </form>
+                    </td>
                     <td>
                         <form action="/delete/{{player.id}}" method="POST" style="display: inline;">
                             <button type="submit" class="remove_btn">Remove</button>
@@ -36,7 +45,6 @@
                  {% endfor %}
             </tbody>
          </table>
-
     </div>
 
     <!-- Add player form -->
@@ -44,7 +52,10 @@
         <input type="text" name="player" id="player" placeholder="Enter player name" required>
         <input type="submit" value="Add Player">
     </form>
-
+    <!-- Start game -->
+    <form action="{{ url_for('start_game') }}" method="GET" class="start_game">
+        <input type="submit" value="Start Game">
+    </form>
 
 </body>
 </html>

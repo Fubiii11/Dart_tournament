@@ -1,3 +1,6 @@
+*{
+    background-color: rgb(245, 222, 179);
+}
 .title {
     margin-inline: auto; 
     max-width: fit-content; 
@@ -37,14 +40,14 @@ th, td {
 
 /* General button styling */
 .remove_btn {
-    background-color: red;
+    background-color: #AF3E4D;
     color: white;
     border: none;
     padding: 8px 12px;
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.3s ease;
-    font-size: 0.6vw;
+    font-size: 0.8vw;
 }
 
 /* Show remove button only on hover */
@@ -84,13 +87,37 @@ th, td {
 /* Change the input field focus outline and shadow */
 .input_field input[type="text"]:focus {
     outline: none;
-    box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.7);
-    border-color: #007bff;
+    box-shadow: 0px 0px 10px #1E3F20;
+    border-color: #1E3F20;
 }
 
-/* Style the submit button */
+/* Style the add player button */
 .input_field input[type="submit"] {
-    background-color: #007bff;
+    background-color: #717C89;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1.5vw;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-left: 10px;
+}
+
+/* Hover effect for the add player button */
+.input_field input[type="submit"]:hover {
+    background-color: #AF3E4D;
+    transform: scale(1.05);
+}
+
+.start_game{
+    margin-inline: auto; 
+    text-align: center;
+    margin-top: 30px; 
+}
+.start_game input[type="submit"] {
+    background-color:#717C89;
     color: white;
     padding: 12px 20px;
     font-size: 1.5vw;
@@ -101,8 +128,16 @@ th, td {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-/* Hover effect for the submit button */
-.input_field input[type="submit"]:hover {
-    background-color: #0056b3;
+.start_game input[type="submit"]:hover {
+    background-color: #AF3E4D;
     transform: scale(1.05);
+}
+
+.present_status{
+    border: none; 
+    width: 100%; 
+    height: 100%; 
+    cursor: pointer; 
+    text-align: center; 
+    font-size: 1vw;"
 }
