@@ -6,6 +6,7 @@
     max-width: fit-content; 
     font-family: fantasy; 
     font-size: 5vw;
+    margin-bottom: 0.5vw;
 }
 .center_text {
     margin-inline: auto; 
@@ -140,4 +141,8 @@ th, td {
     cursor: pointer; 
     text-align: center; 
     font-size: 1vw;"
+}
+
+.little{
+    text-align: center;
 }

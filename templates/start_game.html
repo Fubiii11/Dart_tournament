@@ -7,15 +7,16 @@
     <title>Select Gamemode</title>
 </head>
 <body>
-    <h1>Select Number of Groups</h1>
-    <ul>
+    <h1 class="title">Select Number of Groups</h1>
+    <ul class="list">
         <li><a href="/game/2">2 Groups</a></li>
         <li><a href="/game/4">4 Groups</a></li>
         <li><a href="/game/9">9 Groups</a></li>
-        <!-- Button to go back to the main page-->
-         <form action="{{ url_for('index') }}" method="GET">
-            <input type="submit" value="Return" class="start_game">          
-         </form>
     </ul>
+        <!-- Button to go back to the main page-->
+         <form action="{{ url_for('index') }}" method="GET" class="start_game">
+            <input type="submit" value="Return">          
+         </form>
+
 </body>
 </html>
