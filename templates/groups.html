@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Groups</title>
@@ -11,18 +11,18 @@
     <h1 class="title">Groups</h1>
     <p class="center_text">Number of Groups: {{ number_of_groups }}</p>
 
-    <div>
+    <div class="center_text">
         {% for group in groups %}
-            <h3>Group {{ loop.index }}:</h3>
-            <ul>
+            <h3 class="center_text">Group {{ loop.index }}:</h3>
+            <ul class="list">
                 {% for player in group %}
-                    <li>{{ player }}</li>
+                    <li class="player_groups">{{ player }}</li>
                 {% endfor %}
             </ul>
         {% endfor %}
     </div>
 
-    <form action="{{ url_for('randomize_groups', number_of_groups=number_of_groups) }}" method="POST">
+    <form action="{{ url_for('randomize_groups', number_of_groups=number_of_groups) }}" method="POST" class="start_game">
         <input type="submit" value="Randomize Again">
     </form>
 

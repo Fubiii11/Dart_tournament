@@ -13,7 +13,9 @@
         <!-- Loop trough the numbers and display them-->
         <!-- Loop through the numbers and display them-->
         {% for number in numbers %}
-        <a href="/game/{{ number }}">{{ number }} Groups à {{ (present_players / number) | int }} players</a><br>
+        <form action="/game/{{ number }}" method="GET" class="start_game">
+            <input type="submit" value="{{ number }} Groups à {{ (present_players / number) | int }} players">
+        </form>
         {% endfor %}
         
         
