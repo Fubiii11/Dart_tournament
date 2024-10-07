@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import pytz
+import random
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
@@ -88,6 +89,30 @@ def start_game():
     
     return render_template("start_game.html",present_players=present_players, numbers = numbers)
 
+@app.route("/game/<int:number_of_groups>", methods=["GET"])
+def game(number_of_groups):
+    #get all present players
+    present_players = Dart.query.filter_by(present=True).all()
+    player_names = [player.player for player in present_players]
+
+    # Shuffle players and create groups
+    random.shuffle(player_names)
+    
+    # Calculate number of players per group
+    players_per_group = len(player_names) // number_of_groups
+    groups = []
+    
+    for i in range(number_of_groups):
+        # Create a group and append to groups list
+        group = player_names[i * players_per_group: (i + 1) * players_per_group]
+        groups.append(group)
+
+    return render_template("groups.html", groups=groups, number_of_groups=number_of_groups)
+
+
+@app.route("/randomize/<int:number_of_groups>", methods=["POST"])
+def randomize_groups(number_of_groups):
+    return redirect(url_for("game", number_of_groups=number_of_groups))
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -11,9 +11,12 @@
     <p class ="center_text">Amount of players: {{present_players}}</p>
     <p class="list">
         <!-- Loop trough the numbers and display them-->
+        <!-- Loop through the numbers and display them-->
         {% for number in numbers %}
-        <a href="/game/{{number}}">{{number}} Groups à {{ (present_players / number) | int }} players</a><br>
+        <a href="/game/{{ number }}">{{ number }} Groups à {{ (present_players / number) | int }} players</a><br>
         {% endfor %}
+        
+        
     </p>
         <!-- Button to go back to the main page-->
          <form action="{{ url_for('index') }}" method="GET" class="start_game">
