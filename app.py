@@ -44,7 +44,15 @@ def index():
         players = Dart.query.order_by(Dart.date_created).all()
         for player in players:
             player.date_created = convert_utc_to_zurich(player.date_created)
-        return render_template("index.html", players=players)
+
+        #count the players
+        total_players = Dart.query.count()
+
+        present_players = Dart.query.filter_by(present=True).count()
+
+
+
+        return render_template("index.html", players=players, total_players=total_players, present_players=present_players)
     
 @app.route("/delete/<int:id>", methods=["POST"])
 def delete_player(id):

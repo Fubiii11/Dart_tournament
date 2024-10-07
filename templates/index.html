@@ -52,6 +52,10 @@
         <input type="text" name="player" id="player" placeholder="Enter player name" required>
         <input type="submit" value="Add Player">
     </form>
+    <!-- player coutner -->
+     <p class="center_text">
+        Total Players: {{ total_players }} | Present players: {{ present_players}}
+     </p>
     <!-- Start game -->
     <form action="{{ url_for('start_game') }}" method="GET" class="start_game">
         <input type="submit" value="Start Game">
