@@ -23,11 +23,16 @@
             <tbody>
                 <!-- Loop through all players in the database and diplay them-->
                  {% for player in players %}
-                 <tr>
+                 <tr class="player_row">
                     <td>{{ player.id }}</td>
                     <td>{{ player.player }}</td>
                     <td>{{ player.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                 </tr>
+                    <td>
+                        <form action="/delete/{{player.id}}" method="POST" style="display: inline;">
+                            <button type="submit" class="remove_btn">Remove</button>
+                        </form>
+                    </td>
+                </tr>
                  {% endfor %}
             </tbody>
          </table>
@@ -35,7 +40,7 @@
     </div>
 
     <!-- Add player form -->
-    <form action="/" method="POST" style="margin-top: 20px;">
+    <form action="/" method="POST" class="input_field">
         <input type="text" name="player" id="player" placeholder="Enter player name" required>
         <input type="submit" value="Add Player">
     </form>

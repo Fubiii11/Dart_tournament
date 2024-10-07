@@ -36,6 +36,17 @@ def index():
     else:
         players = Dart.query.order_by(Dart.date_created).all()
         return render_template("index.html", players=players)
+    
+@app.route("/delete/<int:id>", methods=["POST"])
+def delete_player(id):
+    player_to_delete = Dart.query.get_or_404(id)
+
+    try:
+        db.session.delete(player_to_delete)
+        db.session.commit()
+        return redirect("/")
+    except:
+        return "There was a problem deleting this player"
 
 if __name__ == '__main__':
     app.run(debug=True)

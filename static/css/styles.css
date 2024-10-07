@@ -1,4 +1,108 @@
-.title{margin-inline: auto; max-width: fit-content; font-family: fantasy; font-size: 5vw;}
-.center_text{margin-inline: auto; max-width: fit-content; font-size: 1.5vw;}
-.name_field{text-align: center; display: block; margin: 0 auto; width: 25vw; padding: 10px; font-size: 2vw; }
-.player_table{border: 1px solid black;text-align: center; display: block;}
+.title {
+    margin-inline: auto; 
+    max-width: fit-content; 
+    font-family: fantasy; 
+    font-size: 5vw;
+}
+.center_text {
+    margin-inline: auto; 
+    max-width: fit-content; 
+    font-size: 1.5vw;
+}
+.name_field {
+    text-align: center; 
+    display: block; 
+    margin: 0 auto; 
+    width: 25vw; 
+    padding: 10px; 
+    font-size: 2vw; 
+}
+
+/* Table styling */
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    
+  }
+th, td {
+    width: 20vw;
+    height: 3vw;
+}
+.player_table{
+    margin-inline: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1vw;
+}
+
+/* General button styling */
+.remove_btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    font-size: 0.6vw;
+}
+
+/* Show remove button only on hover */
+.player_row {
+    position: relative;
+}
+
+.player_row:hover .remove_btn {
+    visibility: visible;
+}
+
+.remove_btn {
+    visibility: hidden; /* Initially hidden */
+}
+.remove_btn:hover {
+    background-color: darkred;
+}
+
+/* Style the input field */
+.input_field {
+    margin-inline: auto; 
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* input text */
+.input_field input[type="text"] {
+    width: 25vw;
+    padding: 12px;
+    font-size: 1.5vw;
+    border: 2px solid #000;
+    border-radius: 5px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Change the input field focus outline and shadow */
+.input_field input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.7);
+    border-color: #007bff;
+}
+
+/* Style the submit button */
+.input_field input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1.5vw;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for the submit button */
+.input_field input[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
