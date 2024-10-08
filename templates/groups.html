@@ -21,9 +21,14 @@
             </ul>
         {% endfor %}
     </div>
-
+    <!-- Button to randomize the player again -->
     <form action="{{ url_for('randomize_groups', number_of_groups=number_of_groups) }}" method="POST" class="start_game">
         <input type="submit" value="Randomize Again">
+    </form>
+
+    <!-- Button to save the groups to a db -->
+    <form action="/game/savegroups" method="" class="start_game">
+        <input type="submit" value="Save groups">
     </form>
 
     <!-- Button to go back to the main page-->

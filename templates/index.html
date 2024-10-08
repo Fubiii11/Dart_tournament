@@ -78,6 +78,10 @@
     <form action="{{ url_for('start_game') }}" method="GET" class="start_game">
         <input type="submit" value="Start Game">
     </form>
+    <!-- Delete all entries in the db -->
+     <form action="/delete/all" method="POST" class="start_game">
+        <input type="submit" value="delete all entries">
+     </form>
 
 </body>
 </html>

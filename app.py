@@ -66,6 +66,14 @@ def delete_player(id):
     except:
         return "There was a problem deleting this player"
     
+@app.route("/delete/all", methods=["POST"])
+def delete_all_players():
+    try:
+        db.session.query(Dart).delete()
+        db.session.commit()
+        return redirect("/")
+    except:
+        return "There was a problem with deleting all entries"
 @app.route("/toggle_presence/<int:id>", methods=["POST"])
 def toggle_presence(id):
     player = Dart.query.get_or_404(id)
@@ -109,10 +117,48 @@ def game(number_of_groups):
 
     return render_template("groups.html", groups=groups, number_of_groups=number_of_groups)
 
-
 @app.route("/randomize/<int:number_of_groups>", methods=["POST"])
 def randomize_groups(number_of_groups):
     return redirect(url_for("game", number_of_groups=number_of_groups))
+
+# This part is for the first game logic (group battles)
+# Note: Databases for the group battle (überarbeiten)
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    players = db.relationship('GroupPlayer', backref='group', lazy=True)
+
+    def __repr__(self):
+        return f"<Group {self.name}>"
+
+class GroupPlayer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
+    wins = db.Column(db.Integer, default=0)
+    losses = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+        return f"<GroupPlayer Player ID: {self.player_id} Group ID: {self.group_id}>"
+
+class Match(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
+    player1_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
+    player2_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
+    winner_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=True)  # Nullable until a winner is declared
+    match_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"
+
+
+# note: i have to input the single groups in the function to add them to the db
+@app.route("/game/savegroups", methods=["POST"])
+def save_groups_to_db():
+    pass
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
