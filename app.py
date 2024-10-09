@@ -12,6 +12,44 @@ app.config['SECRET_KEY'] = get_secret_key()
 
 db = SQLAlchemy(app)
 
+# Define the databases
+class Dart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    player = db.Column(db.String(200), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    present = db.Column(db.Boolean,default=False)
+
+    def __repr__(self):
+        return "<Player %r>" % self.player
+
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    players = db.relationship('GroupPlayer', backref='group', lazy=True)
+
+    def __repr__(self):
+        return f"<Group {self.name}>"
+class GroupPlayer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
+    dart = db.relationship('Dart', backref='group_players')  # Access Dart model
+    wins = db.Column(db.Integer, default=0)
+    losses = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+        return f"<GroupPlayer Player ID: {self.player_id} Group ID: {self.group_id}>"
+
+class Match(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
+    player1_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
+    player2_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
+    winner_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=True)
+
+    def __repr__(self):
+        return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"
+
 # Check if the database exists and create it if not
 def create_db_if_not_exists():
     if not os.path.exists('test.db'):
@@ -123,46 +161,6 @@ def game(number_of_groups):
 def randomize_groups(number_of_groups):
     return redirect(url_for("game", number_of_groups=number_of_groups))
 
-# Define the databases
-
-class Dart(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    player = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    present = db.Column(db.Boolean,default=False)
-
-    def __repr__(self):
-        return "<Player %r>" % self.player
-
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    players = db.relationship('GroupPlayer', backref='group', lazy=True)
-
-    def __repr__(self):
-        return f"<Group {self.name}>"
-class GroupPlayer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
-    player_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    dart = db.relationship('Dart', backref='group_players')  # Access Dart model
-    wins = db.Column(db.Integer, default=0)
-    losses = db.Column(db.Integer, default=0)
-
-    def __repr__(self):
-        return f"<GroupPlayer Player ID: {self.player_id} Group ID: {self.group_id}>"
-
-class Match(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
-    player1_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    player2_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    winner_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=True)
-
-    def __repr__(self):
-        return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"
-
-
 # note: i have to input the single groups in the function to add them to the db
 @app.route("/game/savegroups", methods=["POST"])
 def save_groups_to_db():
@@ -222,12 +220,9 @@ def record_result():
         if winner:
             winner.wins += 1
         if loser:
-            loser.losses += 1
-            
+            loser.losses += 1      
         db.session.commit()
-
     return redirect(url_for('some_route'))  # Redirect to a route that shows updated matches
-
 
 if __name__ == '__main__':
     app.run(debug=True)
