@@ -190,8 +190,7 @@ def save_groups_to_db():
                 group_player = GroupPlayer(group_id=group.id, player_id=player.id)
                 db.session.add(group_player)
     db.session.commit()
-    number_of_groups = len(groups)
-    
+    groups = Group.query.all() 
     return render_template("elimination_round.html", groups = groups)
 
 @app.route('/start_match/<int:group_id>/<int:player1_id>/<int:player2_id>', methods=['POST'])
