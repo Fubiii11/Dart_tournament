@@ -1,12 +1,25 @@
-from flask import Flask, render_template, request, redirect, url_for
+import os
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from config import get_secret_key
 import pytz
 import random
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+app.config['SECRET_KEY'] = get_secret_key()
+
 db = SQLAlchemy(app)
+
+# Check if the database exists and create it if not
+def create_db_if_not_exists():
+    if not os.path.exists('test.db'):
+        with app.app_context():
+            db.create_all()  # Create all tables
+            print("Database created.")
+
+create_db_if_not_exists()  # Call this function only once when starting the app
 
 class Dart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,10 +34,6 @@ class Dart(db.Model):
 def convert_utc_to_zurich(utc_dt):
     zurich_tz = pytz.timezone('Europe/Zurich')  # Define the Zurich timezone
     return utc_dt.replace(tzinfo=pytz.utc).astimezone(zurich_tz)  # Convert to Zurich timezone
-
-# This was to initially create the database    
-#with app.app_context():
-    #db.create_all()
 
 # Home page route
 @app.route('/', methods=['GET', 'POST'])
@@ -115,6 +124,8 @@ def game(number_of_groups):
         group = player_names[i * players_per_group: (i + 1) * players_per_group]
         groups.append(group)
 
+    session["groups"] = groups
+
     return render_template("groups.html", groups=groups, number_of_groups=number_of_groups)
 
 @app.route("/randomize/<int:number_of_groups>", methods=["POST"])
@@ -140,7 +151,7 @@ class GroupPlayer(db.Model):
 
     def __repr__(self):
         return f"<GroupPlayer Player ID: {self.player_id} Group ID: {self.group_id}>"
-
+"""" note: not sure if i need this part
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
@@ -151,14 +162,32 @@ class Match(db.Model):
 
     def __repr__(self):
         return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"
-
+"""
 
 # note: i have to input the single groups in the function to add them to the db
 @app.route("/game/savegroups", methods=["POST"])
 def save_groups_to_db():
-    pass
+    # first wipe the db
+    GroupPlayer.query.delete()
+    Group.query.delete()
+    db.session.commit()
 
+    # retrieve the groups from the session
+    groups = session.get("groups", [])
 
+    # save the new groups tho the database
+    for group_index, group_players in enumerate(groups):
+        group_name = f"Group {group_index + 1}" # assigne name to Group
+        group = Group(name=group_name)
+        db.session.add(group)
+        db.session.commit() # Commit group to generate its ID
+
+        # add the players to the db
+        for player_name in group_players:
+            player = Dart.query.filter_by(player=player_name).first()
+            if player:
+                group_player = GroupPlayer(group_id=group.id, player_id=player.id)
+                db.session.add(group_player)
 
 if __name__ == '__main__':
     app.run(debug=True)
