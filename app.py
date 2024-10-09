@@ -26,9 +26,10 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     players = db.relationship('GroupPlayer', backref='group', lazy=True)
-
+    matches = db.relationship('Match', backref='group', lazy=True)
     def __repr__(self):
         return f"<Group {self.name}>"
+    
 class GroupPlayer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
@@ -189,7 +190,7 @@ def save_groups_to_db():
     create_matches_for_groups()
 
     groups = Group.query.all() 
-    return render_template("elimination_round.html", groups=groups)
+    return render_template("elimination_round.html", group=groups)
 
 
 def create_matches_for_groups():
