@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Matches</title>
+</head>
+<body>
+    <h1 class="title">Tournament Matches</h1>
+    {% for group in groups %}
+        <div class="group">
+            <h2>{{ group.name }}</h2>
+            {% for player in group.players %}
+                <p>{{ player.player }} - Wins: {{ player.wins }} Losses: {{ player.losses }}</p>
+            {% endfor %}
+            <div class="matches">
+                <h3>Upcoming Matches</h3>
+                {% for match in group.matches %}
+                    <div class="match">
+                        <p>Match {{ match.id }}: Player {{ match.player1_id }} vs Player {{ match.player2_id }}</p>
+                        <p>Status: {{ match.winner_id if match.winner_id else 'Ongoing' }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</body>
+</html>

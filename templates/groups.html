@@ -27,13 +27,14 @@
     </form>
 
     <!-- Button to save the groups to a db -->
-    <form action="/game/savegroups" method="POST" class="start_game">
-        <input type="submit" value="Save groups">
+    <form action="{{ url_for('save_groups_to_db') }}" method="POST" class="start_game">
+        <input type="submit" value="start">
     </form>
 
     <!-- Button to go back to the main page-->
     <form action="{{ url_for('index') }}" method="GET" class="start_game">
         <input type="submit" value="Return">
     </form>
+
 </body>
 </html>

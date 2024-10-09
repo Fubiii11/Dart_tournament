@@ -21,15 +21,6 @@ def create_db_if_not_exists():
 
 create_db_if_not_exists()  # Call this function only once when starting the app
 
-class Dart(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    player = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    present = db.Column(db.Boolean,default=False)
-
-    def __repr__(self):
-        return "<Player %r>" % self.player
-    
 # Function to convert UTC to Zurich time
 def convert_utc_to_zurich(utc_dt):
     zurich_tz = pytz.timezone('Europe/Zurich')  # Define the Zurich timezone
@@ -132,8 +123,18 @@ def game(number_of_groups):
 def randomize_groups(number_of_groups):
     return redirect(url_for("game", number_of_groups=number_of_groups))
 
-# This part is for the first game logic (group battles)
-# Note: Databases for the group battle (überarbeiten)
+# Define the databases
+
+
+class Dart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    player = db.Column(db.String(200), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    present = db.Column(db.Boolean,default=False)
+
+    def __repr__(self):
+        return "<Player %r>" % self.player
+
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -188,6 +189,38 @@ def save_groups_to_db():
             if player:
                 group_player = GroupPlayer(group_id=group.id, player_id=player.id)
                 db.session.add(group_player)
+    db.session.commit()
+    number_of_groups = len(groups)
+    
+    return render_template("elimination_round.html", groups = groups)
+
+@app.route('/start_match/<int:group_id>/<int:player1_id>/<int:player2_id>', methods=['POST'])
+def start_match(group_id, player1_id, player2_id):
+    # Logic to start a match and save it to the database
+    new_match = Match(group_id=group_id, player1_id=player1_id, player2_id=player2_id)
+    db.session.add(new_match)
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/end_match/<int:match_id>', methods=['POST'])
+def end_match(match_id):
+    # Logic to update the match results
+    match = Match.query.get(match_id)
+    winner_id = request.form['winner_id']  # Assume you have a form to input the winner
+    match.winner_id = winner_id
+    db.session.commit()
+    return redirect(url_for('index'))
+
+def update_player_stats(winner_id, loser_id):
+    winner = GroupPlayer.query.filter_by(player_id=winner_id).first()
+    loser = GroupPlayer.query.filter_by(player_id=loser_id).first()
+    winner.wins += 1
+    loser.losses += 1
+    db.session.commit()
+    
+def get_top_players():
+    top_players = GroupPlayer.query.order_by(GroupPlayer.wins.desc()).limit(16).all()
+    return top_players
 
 if __name__ == '__main__':
     app.run(debug=True)
