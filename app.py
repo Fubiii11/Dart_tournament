@@ -125,7 +125,6 @@ def randomize_groups(number_of_groups):
 
 # Define the databases
 
-
 class Dart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     player = db.Column(db.String(200), nullable=False)
@@ -142,28 +141,27 @@ class Group(db.Model):
 
     def __repr__(self):
         return f"<Group {self.name}>"
-
 class GroupPlayer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
     player_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
+    dart = db.relationship('Dart', backref='group_players')  # Access Dart model
     wins = db.Column(db.Integer, default=0)
     losses = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return f"<GroupPlayer Player ID: {self.player_id} Group ID: {self.group_id}>"
-"""" note: not sure if i need this part
+
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
     player1_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
     player2_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    winner_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=True)  # Nullable until a winner is declared
-    match_date = db.Column(db.DateTime, default=datetime.utcnow)
+    winner_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=True)
 
     def __repr__(self):
         return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"
-"""
+
 
 # note: i have to input the single groups in the function to add them to the db
 @app.route("/game/savegroups", methods=["POST"])
@@ -193,33 +191,16 @@ def save_groups_to_db():
     groups = Group.query.all() 
     return render_template("elimination_round.html", groups = groups)
 
-@app.route('/start_match/<int:group_id>/<int:player1_id>/<int:player2_id>', methods=['POST'])
-def start_match(group_id, player1_id, player2_id):
-    # Logic to start a match and save it to the database
-    new_match = Match(group_id=group_id, player1_id=player1_id, player2_id=player2_id)
-    db.session.add(new_match)
-    db.session.commit()
-    return redirect(url_for('index'))
-
-@app.route('/end_match/<int:match_id>', methods=['POST'])
-def end_match(match_id):
-    # Logic to update the match results
-    match = Match.query.get(match_id)
-    winner_id = request.form['winner_id']  # Assume you have a form to input the winner
-    match.winner_id = winner_id
-    db.session.commit()
-    return redirect(url_for('index'))
-
-def update_player_stats(winner_id, loser_id):
-    winner = GroupPlayer.query.filter_by(player_id=winner_id).first()
-    loser = GroupPlayer.query.filter_by(player_id=loser_id).first()
-    winner.wins += 1
-    loser.losses += 1
-    db.session.commit()
+def create_matches_for_groups():
+    groups = Group.query.all()
     
-def get_top_players():
-    top_players = GroupPlayer.query.order_by(GroupPlayer.wins.desc()).limit(16).all()
-    return top_players
+    for group in groups:
+        players = [gp.player_id for gp in group.players]
+        for i in range(len(players)):
+            for j in range(i + 1, len(players)):
+                match = Match(group_id=group.id, player1_id=players[i], player2_id=players[j])
+                db.session.add(match)
+    db.session.commit()
 
 if __name__ == '__main__':
     app.run(debug=True)

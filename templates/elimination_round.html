@@ -12,7 +12,7 @@
         <div class="group">
             <h2>{{ group.name }}</h2>
             {% for player in group.players %}
-                <p>{{ player.player }} - Wins: {{ player.wins }} Losses: {{ player.losses }}</p>
+                <p>{{ player.player.player }} - Wins: {{ player.wins }} Losses: {{ player.losses }}</p>
             {% endfor %}
             <div class="matches">
                 <h3>Upcoming Matches</h3>
