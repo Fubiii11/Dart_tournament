@@ -166,30 +166,33 @@ class Match(db.Model):
 # note: i have to input the single groups in the function to add them to the db
 @app.route("/game/savegroups", methods=["POST"])
 def save_groups_to_db():
-    # first wipe the db
     GroupPlayer.query.delete()
     Group.query.delete()
     db.session.commit()
 
-    # retrieve the groups from the session
     groups = session.get("groups", [])
 
-    # save the new groups tho the database
     for group_index, group_players in enumerate(groups):
-        group_name = f"Group {group_index + 1}" # assigne name to Group
+        group_name = f"Group {group_index + 1}"
         group = Group(name=group_name)
         db.session.add(group)
-        db.session.commit() # Commit group to generate its ID
+        db.session.commit()  # Commit group to generate its ID
 
-        # add the players to the db
+        # add players to the db
         for player_name in group_players:
             player = Dart.query.filter_by(player=player_name).first()
             if player:
                 group_player = GroupPlayer(group_id=group.id, player_id=player.id)
                 db.session.add(group_player)
+
     db.session.commit()
+    
+    # Create matches after saving groups
+    create_matches_for_groups()
+
     groups = Group.query.all() 
-    return render_template("elimination_round.html", groups = groups)
+    return render_template("elimination_round.html", groups=groups)
+
 
 def create_matches_for_groups():
     groups = Group.query.all()
@@ -201,6 +204,30 @@ def create_matches_for_groups():
                 match = Match(group_id=group.id, player1_id=players[i], player2_id=players[j])
                 db.session.add(match)
     db.session.commit()
+
+@app.route("/game/result", methods=["POST"])
+def record_result():
+    match_id = request.form['match_id']
+    winner_id = request.form['winner_id']  # This should be the player who won the match
+
+    match = Match.query.get(match_id)
+    if match:
+        match.winner_id = winner_id
+        db.session.commit()
+
+        # Update wins and losses
+        winner = GroupPlayer.query.filter_by(player_id=winner_id, group_id=match.group_id).first()
+        loser = GroupPlayer.query.filter_by(player_id=match.player1_id if winner_id == match.player2_id else match.player2_id, group_id=match.group_id).first()
+        
+        if winner:
+            winner.wins += 1
+        if loser:
+            loser.losses += 1
+            
+        db.session.commit()
+
+    return redirect(url_for('some_route'))  # Redirect to a route that shows updated matches
+
 
 if __name__ == '__main__':
     app.run(debug=True)
