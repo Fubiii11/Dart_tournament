@@ -1,55 +1,17 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from config import get_secret_key
 import pytz
 import random
+from config import get_secret_key
+from databases import db, Dart, Group, GroupPlayer, Match  # Import the db and models
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config['SECRET_KEY'] = get_secret_key()
 
-db = SQLAlchemy(app)
-
-# Define the databases
-class Dart(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    player = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    present = db.Column(db.Boolean,default=False)
-
-    def __repr__(self):
-        return "<Player %r>" % self.player
-
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    players = db.relationship('GroupPlayer', backref='group', lazy=True)
-    matches = db.relationship('Match', backref='group', lazy=True)
-    def __repr__(self):
-        return f"<Group {self.name}>"
-    
-class GroupPlayer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
-    player_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    dart = db.relationship('Dart', backref='group_players')  # Access Dart model
-    wins = db.Column(db.Integer, default=0)
-    losses = db.Column(db.Integer, default=0)
-
-    def __repr__(self):
-        return f"<GroupPlayer Player ID: {self.player_id} Group ID: {self.group_id}>"
-
-class Match(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
-    player1_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    player2_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    winner_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=True)
-
-    def __repr__(self):
-        return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"
+# Initialize the app with SQLAlchemy
+db.init_app(app)
 
 # Check if the database exists and create it if not
 def create_db_if_not_exists():
@@ -122,8 +84,20 @@ def toggle_presence(id):
         return redirect("/")
     except:
         return "We could not set this player to ready"
-
     
+# note: delete this at the end just for testing
+@app.route("/fill/test", methods=["POST"])
+def fill_testcases():
+    for i in range(1,25):
+        player_content = "player" + str(i)
+        new_player = Dart(player = player_content, present = True)
+        try:
+            db.session.add(new_player)    
+            db.session.commit()
+        except:
+            return "did not work"
+    return redirect("/")
+
 @app.route("/start_game", methods=["GET","POST"])
 def start_game():
     numbers = []
