@@ -45,5 +45,9 @@ class Match(db.Model):
     player1_points = db.Column(db.Integer, nullable=True)
     player2_points = db.Column(db.Integer, nullable=True)
 
+    # Relationships
+    player1 = db.relationship('Dart', foreign_keys=[player1_id])
+    player2 = db.relationship('Dart', foreign_keys=[player2_id])
+
     def __repr__(self):
         return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"

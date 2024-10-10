@@ -42,7 +42,6 @@
                  {% for player in players %}
                  <tr class="player_row">
                     <td>{{ player.player }}</td>
-                    <td>{{ player.date_created.strftime('%d-%m-%Y %H:%M:%S') }}</td>
                     <td>
                         <form action="/toggle_presence/{{ player.id }}" method="POST" style="display: inline;">
                             <input type="submit" class="present_status" 

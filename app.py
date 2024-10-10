@@ -141,6 +141,7 @@ def randomize_groups(number_of_groups):
 def save_groups_to_db():
     GroupPlayer.query.delete()
     Group.query.delete()
+    Match.query.delete()
     db.session.commit()
 
     groups = session.get("groups", [])
@@ -163,8 +164,13 @@ def save_groups_to_db():
     # Create matches after saving groups
     create_matches_for_groups()
 
-    groups = Group.query.all() 
-    return render_template("elimination_round.html", group=groups)
+    return redirect(url_for("show_elimination_round"))
+
+@app.route("/elimination-round")
+def show_elimination_round():
+    groups = Group.query.all()
+    matches = Match.query.all() 
+    return render_template("elimination_round.html", groups = groups, matches = matches)
 
 
 def create_matches_for_groups():
@@ -178,6 +184,7 @@ def create_matches_for_groups():
                 db.session.add(match)
     db.session.commit()
 
+"""
 @app.route("/game/result", methods=["POST"])
 def record_result():
     match_id = request.form['match_id']
@@ -198,6 +205,6 @@ def record_result():
             loser.losses += 1      
         db.session.commit()
     return redirect(url_for('some_route'))  # Redirect to a route that shows updated matches
-
+"""
 if __name__ == '__main__':
     app.run(debug=True)
