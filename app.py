@@ -184,27 +184,35 @@ def create_matches_for_groups():
                 db.session.add(match)
     db.session.commit()
 
-"""
-@app.route("/game/result", methods=["POST"])
-def record_result():
-    match_id = request.form['match_id']
-    winner_id = request.form['winner_id']  # This should be the player who won the match
+@app.route("/elimination-round/points/<int:match_id>/<string:player>", methods=["POST"])
+def point_handler(match_id, player):
+    # Get the match by its ID
+    match = Match.query.get_or_404(match_id)
 
-    match = Match.query.get(match_id)
-    if match:
-        match.winner_id = winner_id
-        db.session.commit()
+    # Toggle points for player1 or player2
+    if player == 'player1':
+        if match.player1_points is None:
+            match.player1_points = 1 
+        elif match.player1_points == 0:
+            match.player1_points = 1
+        elif match.player1_points == 1:
+            match.player1_points = 2
+        else:
+            match.player1_points = 0 
+    elif player == 'player2':
+        if match.player2_points is None:
+            match.player2_points = 1
+        elif match.player2_points == 0:
+            match.player2_points = 1
+        elif match.player2_points == 1:
+            match.player2_points = 2
+        else:
+            match.player2_points = 0
+    # Save changes to db
+    db.session.commit()
 
-        # Update wins and losses
-        winner = GroupPlayer.query.filter_by(player_id=winner_id, group_id=match.group_id).first()
-        loser = GroupPlayer.query.filter_by(player_id=match.player1_id if winner_id == match.player2_id else match.player2_id, group_id=match.group_id).first()
-        
-        if winner:
-            winner.wins += 1
-        if loser:
-            loser.losses += 1      
-        db.session.commit()
-    return redirect(url_for('some_route'))  # Redirect to a route that shows updated matches
-"""
+    #redirect back to the page
+    return redirect("/elimination-round")
+
 if __name__ == '__main__':
     app.run(debug=True)

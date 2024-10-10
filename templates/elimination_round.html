@@ -17,7 +17,6 @@
             <th>Points</th>
             <th>Second Player</th>
             <th>StartGame</th>
-            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -26,12 +25,18 @@
         <tr class="player_row">
             <td>{{ match.player1.player }}</td>
             <td>
+                <form action="/elimination-round/points/{{match.id}}/player1" method="POST" style="display: inline">
+                    <input type="submit" class="present_status" value="{{match.player1_points or 0}}">
+                </form>
             </td>
             <td>
+                <form action="/elimination-round/points/{{match.id}}/player2" method="POST" style="display: inline">
+                    <input type="submit" class="present_status" value="{{match.player2_points or 0}}">
+                </form>
             </td>
             <td>{{ match.player2.player}}</td>
             <td></td>
-            <td></td>
+
         </tr>
         {% endfor %}
     </tbody>
