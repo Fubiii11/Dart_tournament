@@ -191,27 +191,35 @@ def point_handler(match_id, player):
 
     # Toggle points for player1 or player2
     if player == 'player1':
-        if match.player1_points is None:
-            match.player1_points = 1 
-        elif match.player1_points == 0:
+        if match.player1_points == 0 and match.player2_points != 2:
             match.player1_points = 1
-        elif match.player1_points == 1:
+        elif match.player1_points == 1 and match.player2_points != 2:
             match.player1_points = 2
-        else:
+        elif match.player1_points == 2:
             match.player1_points = 0 
     elif player == 'player2':
-        if match.player2_points is None:
+        if match.player2_points == 0 and match.player1_points != 2:
             match.player2_points = 1
-        elif match.player2_points == 0:
-            match.player2_points = 1
-        elif match.player2_points == 1:
+        elif match.player2_points == 1 and match.player1_points != 2:
             match.player2_points = 2
-        else:
+        elif match.player2_points == 2:
             match.player2_points = 0
     # Save changes to db
     db.session.commit()
 
     #redirect back to the page
+    return redirect("/elimination-round")
+
+@app.route("/elimination-round/start/<int:match_id>", methods=["POST"])
+def start_match(match_id):
+    # Find the correct match using the match_id
+    match = Match.query.get_or_404(match_id)
+    if match.match_started == False:
+        match.match_started = True
+    else:
+        match.match_started = False
+    db.session.commit()
+
     return redirect("/elimination-round")
 
 if __name__ == '__main__':

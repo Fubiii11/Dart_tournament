@@ -42,8 +42,10 @@ class Match(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
     player1_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
     player2_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
-    player1_points = db.Column(db.Integer, nullable=True)
-    player2_points = db.Column(db.Integer, nullable=True)
+    player1_points = db.Column(db.Integer, default = 0)
+    player2_points = db.Column(db.Integer, default = 0)
+    match_started = db.Column(db.Boolean, default = False)
+    match_finished = db.Column (db.Boolean, default = False)
 
     # Relationships
     player1 = db.relationship('Dart', foreign_keys=[player1_id])
