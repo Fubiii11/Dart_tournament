@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import datetime
 import pytz
 import random
@@ -234,10 +234,47 @@ def start_match(match_id):
 
     return redirect("/elimination-round")
 
-@app.route("/elimination-round/results", methods = ["GET"])
+@app.route("/elimination-round/results", methods=["GET"])
 def show_results():
+    matches = Match.query.all()
 
-    return render_template("first_leaderboard.html")
+    # Check if all matches are finished
+    for match in matches:
+        if not match.match_finished:
+            # Flash an error message if any match is not finished
+            flash("Not all matches are played or finished", "error")
+
+            return redirect("/elimination-round")
+    
+    # calculate the points for each player
+    group_players = GroupPlayer.query.all()
+
+    # Reset total points before calculation
+    for gp in group_players:
+        gp.total_points = 0
+    
+    # Iterate through all matches and update total_points for the players that played
+    for match in matches:
+        if match.match_finished:
+            # Upadte Player1 points
+            player1_gp = GroupPlayer.query.filter_by(group_id = match.group_id, player_id = match.player1_id).first()
+            if player1_gp:
+                player1_gp.total_points += match.player1_points
+            # Update Player2 points  
+            player2_gp = GroupPlayer.query.filter_by(group_id = match.group_id, player_id = match.player2_id).first()
+            if player2_gp:
+                player2_gp.total_points += match.player2_points
+
+    # commit the changes
+    db.session.commit()
+
+    leaderboard = Group.query.all()
+
+    for group in leaderboard:
+        group.players.sort(key=lambda p: p.total_points, reverse=True)
+
+    # Render the leaderboard page if all matches are finished
+    return render_template("first_leaderboard.html", leaderboard = leaderboard)
 
 
 if __name__ == '__main__':

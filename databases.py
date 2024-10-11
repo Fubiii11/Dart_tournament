@@ -30,8 +30,7 @@ class GroupPlayer(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
     player_id = db.Column(db.Integer, db.ForeignKey('dart.id'), nullable=False)
     dart = db.relationship('Dart', backref='group_players')
-    wins = db.Column(db.Integer, default=0)
-    losses = db.Column(db.Integer, default=0)
+    total_points = db.Column(db.Integer, default = None)
 
     def __repr__(self):
         return f"<GroupPlayer Player ID: {self.player_id} Group ID: {self.group_id}>"

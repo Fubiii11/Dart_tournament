@@ -23,7 +23,25 @@
 </head>
 <body>
     <h1 class="title"> Leaderboard </h1>
-    <p> Hello World </p>
 
+    {% for group in leaderboard %}
+    <h2 class="center_text">Group {{ group.name }}</h2>
+    <table class="player_table">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Total Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in group.players %}
+            <tr>
+                <td>{{ player.dart.player}}</td>
+                <td>{{ player.total_points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
 </body>
 </html>

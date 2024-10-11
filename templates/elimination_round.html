@@ -23,6 +23,16 @@
 </head>
 <body>
     <h1 class="title">Match List</h1>
+    <!-- Flash Message Handling (with alerts for JavaScript) -->
+    <script>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    alert("{{ message }}");  // Show alert for each flashed message
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
     <ul>
     <table class="player_table">
     <thead>
@@ -76,7 +86,6 @@
     </tbody>
     </table>
 
-    
     <!-- Button to finish the elimination round (checks if everything got played)-->
     <form action="/elimination-round/results" method="GET" class="start_game">
         <input type="submit" value="Finish elimination round">
