@@ -39,14 +39,14 @@
         {% for match in matches %}
         <tr>
             <!-- Display the first player -->
-            <td style="background-color: {{'yellow' if match.match_started}};">
+            <td style="background-color: {{'yellow' if match.match_started else 'green' if match.match_finished}};">
                 {{ match.player1.player }}
             </td>
             <!-- First player's points -->
             <td>
                 <form action="/elimination-round/points/{{match.id}}/player1" method="POST" style="display: inline;">
                     <input type="submit" class="present_status" 
-                    style="background-color: {{'yellow' if match.match_started}};"
+                    style="background-color: {{'yellow' if match.match_started else 'green' if match.match_finished}};"
                     value="{{match.player1_points or 0}}">
                 </form>
             </td>
@@ -54,19 +54,19 @@
             <td>
                 <form action="/elimination-round/points/{{match.id}}/player2" method="POST" style="display: inline;">
                     <input type="submit" class="present_status" 
-                    style="background-color: {{'yellow' if match.match_started}};"
+                    style="background-color: {{'yellow' if match.match_started else 'green' if match.match_finished}};"
                     value="{{match.player2_points or 0}}">
                 </form>
             </td>
             <!-- Display the second player -->
-            <td style="background-color: {{'yellow' if match.match_started}};">
+            <td style="background-color: {{'yellow' if match.match_started else 'green' if match.match_finished}};">
                 {{ match.player2.player }}
             </td>
             <!-- Start button -->
             <td>
                 <form action="{{ url_for('start_match', match_id=match.id) }}" method="POST" style="display: inline;">
                     <input type="submit" class="present_status" 
-                    style="background-color: {{'yellow' if match.match_started}};"
+                    style="background-color: {{'yellow' if match.match_started else 'green' if match.match_finished}};"
                     value="{{'cancel' if match.match_started else 'start'}}">
                 </form>
                 
@@ -78,12 +78,12 @@
 
     
     <!-- Button to finish the elimination round (checks if everything got played)-->
-    <form action="{{ url_for('index') }}" method="GET" class="start_game">
-        <input type="submit" value="Return">
+    <form action="/elimination-round/results" method="GET" class="start_game">
+        <input type="submit" value="Finish elimination round">
     </form>
     <!-- Button to go back to the last page -->
     <form action="{{ url_for('index') }}" method="GET" class="start_game">
-        <input type="submit" value="Return">
+        <input type="submit" value="Return (does not save)">
     </form>
 
 </body>

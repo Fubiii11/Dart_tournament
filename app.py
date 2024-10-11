@@ -193,17 +193,29 @@ def point_handler(match_id, player):
     if player == 'player1':
         if match.player1_points == 0 and match.player2_points != 2:
             match.player1_points = 1
+            match.match_started = True
         elif match.player1_points == 1 and match.player2_points != 2:
             match.player1_points = 2
+            match.match_started = False
+            match.match_finished = True
         elif match.player1_points == 2:
-            match.player1_points = 0 
+            match.player1_points = 0
+            match.match_finished = False 
+            if match.player2_points == 1:
+                match.match_started = True
     elif player == 'player2':
         if match.player2_points == 0 and match.player1_points != 2:
             match.player2_points = 1
+            match.match_started = True
         elif match.player2_points == 1 and match.player1_points != 2:
             match.player2_points = 2
+            match.match_started = False
+            match.match_finished = True
         elif match.player2_points == 2:
             match.player2_points = 0
+            match.match_finished = False
+            if match.player1_points == 1:
+                match.match_started = True
     # Save changes to db
     db.session.commit()
 
@@ -221,6 +233,12 @@ def start_match(match_id):
     db.session.commit()
 
     return redirect("/elimination-round")
+
+@app.route("/elimination-round/results", methods = ["GET"])
+def show_results():
+
+    return render_template("first_leaderboard.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)

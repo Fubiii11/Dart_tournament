@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Matches</title>
+    <script>
+        // Save the scroll position when the page is unloaded (i.e., before reloading)
+        window.onbeforeunload = function() {
+            localStorage.setItem('scrollPosition', window.scrollY);
+        };
+        
+        // Restore the scroll position when the page is loaded
+        window.onload = function() {
+            const scrollPosition = localStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, scrollPosition);  // Scroll to the saved position
+                localStorage.removeItem('scrollPosition');  // Clear the scroll position after restoring
+            }
+        };
+        </script>
+</head>
+<body>
+    <h1 class="title"> Leaderboard </h1>
+    <p> Hello World </p>
+
+</body>
+</html>
