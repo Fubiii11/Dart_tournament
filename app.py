@@ -273,8 +273,37 @@ def show_results():
     for group in leaderboard:
         group.players.sort(key=lambda p: p.total_points, reverse=True)
 
+    # Get the players that are advancing
+    advancing_players = get_players_for_next_round(leaderboard)
+
     # Render the leaderboard page if all matches are finished
-    return render_template("first_leaderboard.html", leaderboard = leaderboard)
+    return render_template("first_leaderboard.html", leaderboard = leaderboard, advancing_players = advancing_players)
+
+def get_players_for_next_round(groups):
+    total_players_needed = 16
+    num_groups = len(groups)
+    
+    # how many players from each group should advance
+    players_per_groups = total_players_needed // num_groups
+    remaining_players = total_players_needed % num_groups
+
+    advancing_players = []
+
+    # Select the players from each groups:
+    for group in groups:
+        # Add the 'player_per_group' players to the advancing list
+        advancing_players.extend(group.players[:players_per_groups])
+
+    # Handle the remaining players if there are any
+    if remaining_players > 0:
+        #Collect the next best player from each group
+        potential_advancing_player = [group.players[players_per_groups] for group in groups if len(group.players) > players_per_groups]
+
+        # Sort remaining players by total points and take the top ones based on 'remaining_players'
+        potential_advancing_player.sort(key=lambda p: p.total_points, reverse=True)
+        advancing_players.extend(potential_advancing_player[:remaining_players])
+
+    return advancing_players
 
 
 if __name__ == '__main__':

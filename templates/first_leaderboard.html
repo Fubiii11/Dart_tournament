@@ -36,12 +36,11 @@
         <tbody>
             {% for player in group.players %}
             <tr>
-                <td>{{ player.dart.player}}</td>
-                <td>{{ player.total_points }}</td>
+                <td {% if player in advancing_players %} class="highlight" {% endif %}>{{ player.dart.player }}</td>
+                <td {% if player in advancing_players %} class="highlight" {% endif %}>{{ player.total_points }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% endfor %}
-</body>
-</html>
+    
