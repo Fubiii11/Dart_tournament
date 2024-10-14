@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tournament Matches</title>
+    <title>Leaderboard</title>
     <script>
         // Save the scroll position when the page is unloaded (i.e., before reloading)
         window.onbeforeunload = function() {
@@ -43,4 +43,10 @@
         </tbody>
     </table>
     {% endfor %}
-    
+    <form action="/tournament/start" method="GET" class="start_game">
+        <input type="submit" value="Start Tournament">
+    </form>
+    <form action="/elimination-round/return" method="GET" class="start_game">
+        <input type="submit" value="Return">
+    </form>
+</body>

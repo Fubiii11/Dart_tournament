@@ -136,7 +136,7 @@ def game(number_of_groups):
 def randomize_groups(number_of_groups):
     return redirect(url_for("game", number_of_groups=number_of_groups))
 
-# note: i have to input the single groups in the function to add them to the db
+
 @app.route("/game/savegroups", methods=["POST"])
 def save_groups_to_db():
     GroupPlayer.query.delete()
@@ -305,6 +305,9 @@ def get_players_for_next_round(groups):
 
     return advancing_players
 
+@app.route("/elimination-round/return", methods=["GET"])
+def return_to_scoreboard():
+    return redirect(url_for("elimination_round.html"))
 
 if __name__ == '__main__':
     app.run(debug=True)

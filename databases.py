@@ -52,3 +52,13 @@ class Match(db.Model):
 
     def __repr__(self):
         return f"<Match {self.id} between {self.player1_id} and {self.player2_id}>"
+
+# Finale torunament
+class FinalTournamentPlayer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    ranking = db.Column(db.Integer, nullable=False)  # Optional, if players are ranked
+    tournament_id = db.Column(db.Integer, nullable=False)  # If you're tracking tournaments
+
+    def __repr__(self):
+        return f"<player: {self.name} ranking: {self.ranking}>"
