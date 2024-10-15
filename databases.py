@@ -57,7 +57,7 @@ class Match(db.Model):
 class FinalTournamentPlayer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    ranking = db.Column(db.Integer, nullable=False)  # Optional, if players are ranked
+    ranking = db.Column(db.Integer, nullable=True)  # Optional, if players are ranked
     tournament_id = db.Column(db.Integer, nullable=False)  # If you're tracking tournaments
 
     def __repr__(self):
