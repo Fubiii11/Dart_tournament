@@ -4,8 +4,7 @@ from datetime import datetime
 import pytz
 import random
 from config import get_secret_key
-from databases import db, Dart, Group, GroupPlayer, Match, FinalTournamentPlayer  # Import the db and models
-
+from databases import *   # Import the db and models note: change * maybe
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config['SECRET_KEY'] = get_secret_key()
@@ -269,7 +268,9 @@ def show_results():
     db.session.commit()
 
     leaderboard = Group.query.all()
-
+    # note: This has to be overworked. what if someone goes back how does it safe
+    # what if the advancing players gets changed???
+    FinalTournamentPlayer.query.delete()
     # Sort players inside each groups based on theyr points
     for group in leaderboard:
         group.players.sort(key=lambda p: p.total_points, reverse=True)
@@ -278,6 +279,7 @@ def show_results():
     advancing_players = get_players_for_next_round(leaderboard)
 
     for player in advancing_players:
+        print(player.dart.player)
         tournamentPlayer = FinalTournamentPlayer(name=player.dart.player)
         db.session.add(tournamentPlayer)
     # Render the leaderboard page if all matches are finished
@@ -309,15 +311,23 @@ def get_players_for_next_round(groups):
    
     return advancing_players
 
+@app.route("/tournament/start", methods=["GET"])
+def render_brackets():
+    return render_template("double_elimination.html")
+
 @app.route("/elimination-round/return", methods=["GET"])
 def return_to_scoreboard():
     return redirect(url_for("show_elimination_round"))
 
-@app.route("/tournament/start", methods=["GET"])
-def render_brackets():
 
-    return render_template("bracket_tournament.html")
+# This is to initialize the tournament matches
+def initialize_matches():
+    for bracket_num in range(1, 27):
+        match = TournamentMatch(bracket_number=bracket_num)
+        db.session.add(match)
+    db.session.commit()
 
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
