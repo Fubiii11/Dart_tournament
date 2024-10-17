@@ -62,21 +62,19 @@ class TournamentPlayer(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     player_name = db.Column(db.String(100), nullable=False)
     player_id = db.Column(db.Integer, unique=True, nullable=False)
-    final_rank = db.Column(db.Integer, nulalble=True)
+    final_rank = db.Column(db.Integer, nullable=True)
 
 
     def __repr__(self):
         return f"<TournamentPlayer {self.player_name} (ID: {self.player_id}) - Rank: {self.final_rank}>"
 
 class TournamentMatch(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     bracket_number = db.Column(db.Integer, nullable=False)
-    player1_id = db.Column(db.Integer, db.ForeignKey('TournamentPlayer.player_id'), nullable=True)
-    player2_id = db.Column(db.Integer, db.ForeignKey('TournamentPlayer.player_id'), nullable=True)
-    winner_id = db.Column(db.Integer, db.ForeignKey('TournamentPlayer.player_id'), nullable=True)  # The winner of the match
+    player1_id = db.Column(db.Integer, db.ForeignKey('tournament_player.player_id'), nullable=True)
+    player2_id = db.Column(db.Integer, db.ForeignKey('tournament_player.player_id'), nullable=True)
+    winner_id = db.Column(db.Integer, db.ForeignKey('tournament_player.player_id'), nullable=True)  # The winner of the match
+    match_finished = db.Column(db.Boolean, default=False)
 
-
-    match_finished = db.Column(db.Boolean, default = False)
-
-  def __repr__(self):
+    def __repr__(self):
         return f"<TournamentMatch Bracket {self.bracket_number} - {self.player1_id} vs {self.player2_id}>"

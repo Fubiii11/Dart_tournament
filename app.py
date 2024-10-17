@@ -103,9 +103,10 @@ def start_game():
     present_players = Dart.query.filter_by(present=True).count()
 
     #find all valid divisors of present_players (ignoring 0)
-    for i in range(2, present_players):
-        if present_players % i == 0:
-            numbers.append(i)
+    if present_players > 1:
+        for i in range(2, present_players):
+            if present_players % i == 0:
+                numbers.append(i)
     
     return render_template("start_game.html",present_players=present_players, numbers = numbers)
 
@@ -268,20 +269,22 @@ def show_results():
     db.session.commit()
 
     leaderboard = Group.query.all()
-    # note: This has to be overworked. what if someone goes back how does it safe
-    # what if the advancing players gets changed???
-    FinalTournamentPlayer.query.delete()
+    
     # Sort players inside each groups based on theyr points
     for group in leaderboard:
         group.players.sort(key=lambda p: p.total_points, reverse=True)
+        print(f"Group {group.name}")
+        for player in group.players:
+            print(f"{player.dart.player} - {player.total_points}")
 
     # Get the players that are advancing
     advancing_players = get_players_for_next_round(leaderboard)
+    
+    # note: this is to safe the players but somehow it unsorts the list
+    # that gets displayed on the first leaderboard site
+    assigne_tournament_player(advancing_players)
 
-    for player in advancing_players:
-        print(player.dart.player)
-        tournamentPlayer = FinalTournamentPlayer(name=player.dart.player)
-        db.session.add(tournamentPlayer)
+
     # Render the leaderboard page if all matches are finished
     return render_template("first_leaderboard.html", leaderboard = leaderboard, advancing_players = advancing_players)
 
@@ -308,7 +311,7 @@ def get_players_for_next_round(groups):
         # Sort remaining players by total points and take the top ones based on 'remaining_players'
         potential_advancing_player.sort(key=lambda p: p.total_points, reverse=True)
         advancing_players.extend(potential_advancing_player[:remaining_players])
-   
+    
     return advancing_players
 
 @app.route("/tournament/start", methods=["GET"])
@@ -321,13 +324,34 @@ def return_to_scoreboard():
 
 
 # This is to initialize the tournament matches
+def assigne_tournament_player(players):
+    # Make sure there are no entries in the db
+    # note: think about a abck button but i would not
+    TournamentMatch.query.delete()
+    TournamentPlayer.query.delete()
+    db.session.commit()
+
+    for player in players:
+        dbplayer = TournamentPlayer(
+            player_name=player.dart.player, # get the player name from the dart db
+            player_id=player.player_id,     # get the players id
+        )
+        db.session.add(dbplayer)
+    db.session.commit()
+
 def initialize_matches():
-    for bracket_num in range(1, 27):
+    for bracket_num in range(1, 32):
         match = TournamentMatch(bracket_number=bracket_num)
         db.session.add(match)
     db.session.commit()
 
-    
+def assign_fist_matches(players):
+    for i in range(8):
+        #select matches 1-8 and assige the players
+        match = TournamentMatch.query.filter_by(bracket_number = i + 1).first()
+        match.player1_id = players[2 * i].player_id # Assigne player1
+        match.player2_id = players[2 * i + 1].player_id # Assigne player2
+        db.session.commit()
 
 if __name__ == '__main__':
     app.run(debug=True)
