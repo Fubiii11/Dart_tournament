@@ -73,8 +73,14 @@ class TournamentMatch(db.Model):
     bracket_number = db.Column(db.Integer, nullable=False)
     player1_id = db.Column(db.Integer, db.ForeignKey('tournament_player.player_id'), nullable=True)
     player2_id = db.Column(db.Integer, db.ForeignKey('tournament_player.player_id'), nullable=True)
+    player1_points = db.Column(db.Integer, default=0)
+    player2_points = db.Column(db.Integer, default=0)
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_player.player_id'), nullable=True)  # The winner of the match
     match_finished = db.Column(db.Boolean, default=False)
+
+    # relationships
+    player1 = db.relationship('TournamentPlayer', foreign_keys=[player1_id])
+    player2 = db.relationship('TournamentPlayer', foreign_keys=[player2_id])
 
     def __repr__(self):
         return f"<TournamentMatch Bracket {self.bracket_number} - {self.player1_id} vs {self.player2_id}>"

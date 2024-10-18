@@ -8,19 +8,22 @@
 </head>
 <body>
     <h1 class="title"> Title </h1>
+    <div class="bracket-container"></div>    
     {% for match in matches%}
-    <div class="flex-container">
-        <div class="player1">
-            <p>{{match.player1_id}}</p>
-            <form action="" method="post">
-                <input type="submit" value="testest">
-            </form>        
-        </div>
-        <div class="player2">
-            <p>{{match.player2_id}}</p>
-            <form action="/tournament/" method="post">
-                <input type="submit" value="testestste">
-            </form>
+        <div class="match">
+            <div class="player1">
+                <p>{{match.player1.player_name}}</p>
+                <form action="/update_score/{{ match.bracket_number }}/player1" method="post">
+                    <input type="submit" value="{{ match.player1_points }}">
+                </form>        
+            </div>
+
+            <div class="player2">
+                <p>{{match.player2.player_name}}</p>
+                <form action="/update_score/{{ match.bracket_number }}/player2" method="post">
+                    <input type="submit" value="{{ match.player1_points }}">
+                </form>
+            </div>
         </div>
     {% endfor %}   
     </div>

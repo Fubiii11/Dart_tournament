@@ -359,5 +359,28 @@ def assign_fist_matches(players):
         match.player2_id = players[2 * i + 1].player_id # Assigne player2
         db.session.commit()
 
+@app.route("/update_score/<int:bracket_number>/<string:player>", methods=["POST"])
+def point_and_bracket_handler(bracket_number, player):
+    match = TournamentMatch.query.filter_by(bracket_number=bracket_number).first_or_404()
+
+    if player == 'player1':
+        if match.player1_points < 2 and match.player2_points != 2:
+            match.player1_points += 1
+        if match.player1_points == 2:
+            match.player1_points = 0  # Reset if max score reached
+
+    elif player == 'player2':
+        if match.player2_points < 2 and match.player1_points != 2:
+            match.player2_points += 1
+        if match.player2_points == 2:
+            match.player2_points = 0  # Reset if max score reached
+
+    # Save changes to db
+    db.session.commit()
+
+    # Redirect back to the page
+    return redirect("/tournament/start")
+
+
 if __name__ == '__main__':
     app.run(debug=True)
