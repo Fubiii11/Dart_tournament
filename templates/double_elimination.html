@@ -7,5 +7,21 @@
     <title>Double-elimination bracket</title>
 </head>
 <body>
-    <h1 class="title"> test </h1>
+    <h1 class="title"> Title </h1>
+    {% for match in matches%}
+    <div class="flex-container">
+        <div class="player1">
+            <p>{{match.player1_id}}</p>
+            <form action="" method="post">
+                <input type="submit" value="testest">
+            </form>        
+        </div>
+        <div class="player2">
+            <p>{{match.player2_id}}</p>
+            <form action="/tournament/" method="post">
+                <input type="submit" value="testestste">
+            </form>
+        </div>
+    {% endfor %}   
+    </div>
 </body>

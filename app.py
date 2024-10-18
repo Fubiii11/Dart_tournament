@@ -280,11 +280,6 @@ def show_results():
     # Get the players that are advancing
     advancing_players = get_players_for_next_round(leaderboard)
     
-    # note: this is to safe the players but somehow it unsorts the list
-    # that gets displayed on the first leaderboard site
-    assigne_tournament_player(advancing_players)
-
-
     # Render the leaderboard page if all matches are finished
     return render_template("first_leaderboard.html", leaderboard = leaderboard, advancing_players = advancing_players)
 
@@ -316,7 +311,18 @@ def get_players_for_next_round(groups):
 
 @app.route("/tournament/start", methods=["GET"])
 def render_brackets():
-    return render_template("double_elimination.html")
+
+    # Get the players that advance into the Tournament
+    all_players = Group.query.all()
+    advancing_players = get_players_for_next_round(all_players)
+
+    # Put those players into the database
+    assigne_tournament_player(advancing_players)
+    # Initialize the brackets and fill the first ones
+    initialize_matches()
+    assign_fist_matches(advancing_players)
+    matches = TournamentMatch.query.all()
+    return render_template("double_elimination.html", matches = matches)
 
 @app.route("/elimination-round/return", methods=["GET"])
 def return_to_scoreboard():
