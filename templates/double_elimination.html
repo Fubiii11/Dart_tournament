@@ -13,15 +13,15 @@
         <div class="match">
             <div class="player1">
                 <p>{{match.player1.player_name}}</p>
-                <form action="/update_score/{{ match.bracket_number }}/player1" method="post">
+                <form action="/update_score/{{ match.bracket_number }}/player1" method="POST">
                     <input type="submit" value="{{ match.player1_points }}">
                 </form>        
             </div>
 
             <div class="player2">
                 <p>{{match.player2.player_name}}</p>
-                <form action="/update_score/{{ match.bracket_number }}/player2" method="post">
-                    <input type="submit" value="{{ match.player1_points }}">
+                <form action="/update_score/{{ match.bracket_number }}/player2" method="POST">
+                    <input type="submit" value="{{ match.player2_points }}">
                 </form>
             </div>
         </div>

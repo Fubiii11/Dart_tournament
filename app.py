@@ -364,23 +364,28 @@ def point_and_bracket_handler(bracket_number, player):
     match = TournamentMatch.query.filter_by(bracket_number=bracket_number).first_or_404()
 
     if player == 'player1':
-        if match.player1_points < 2 and match.player2_points != 2:
-            match.player1_points += 1
         if match.player1_points == 2:
             match.player1_points = 0  # Reset if max score reached
-
+            
+        elif match.player1_points < 2 and match.player2_points != 2:
+            match.player1_points += 1
     elif player == 'player2':
-        if match.player2_points < 2 and match.player1_points != 2:
-            match.player2_points += 1
         if match.player2_points == 2:
             match.player2_points = 0  # Reset if max score reached
+        elif match.player2_points < 2 and match.player1_points != 2:
+            match.player2_points += 1
+
 
     # Save changes to db
     db.session.commit()
 
     # Redirect back to the page
-    return redirect("/tournament/start")
+    return redirect("/tournament/start2")
 
+@app.route("/tournament/start2", methods = ["GET"])
+def get_back_to_page():
+    matches = TournamentMatch.query.all()
+    return render_template("double_elimination.html", matches = matches)
 
 if __name__ == '__main__':
     app.run(debug=True)
