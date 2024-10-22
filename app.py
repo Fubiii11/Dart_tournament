@@ -322,6 +322,7 @@ def render_brackets():
     initialize_matches()
     assign_fist_matches(advancing_players)
     matches = TournamentMatch.query.all()
+
     return render_template("double_elimination.html", matches = matches)
 
 @app.route("/elimination-round/return", methods=["GET"])
@@ -374,8 +375,10 @@ def point_and_bracket_handler(bracket_number, player):
             match.player2_points = 0  # Reset if max score reached
         elif match.player2_points < 2 and match.player1_points != 2:
             match.player2_points += 1
-
-
+        
+    # Transfer of the winner and looser in the new bracket
+    if match.player2_points == 2 or match.player1_points == 2:
+        pass    
     # Save changes to db
     db.session.commit()
 
@@ -385,7 +388,7 @@ def point_and_bracket_handler(bracket_number, player):
 @app.route("/tournament/start2", methods = ["GET"])
 def get_back_to_page():
     matches = TournamentMatch.query.all()
-    return render_template("double_elimination.html", matches = matches)
+    return render_template("double_elimination.html", matches = matches )
 
 if __name__ == '__main__':
     app.run(debug=True)

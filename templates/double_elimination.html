@@ -2,29 +2,36 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chart.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Double-elimination bracket</title>
 </head>
 <body>
     <h1 class="title"> Title </h1>
-    <div class="bracket-container"></div>    
-    {% for match in matches%}
-        <div class="match">
-            <div class="player1">
-                <p>{{match.player1.player_name}}</p>
-                <form action="/update_score/{{ match.bracket_number }}/player1" method="POST">
-                    <input type="submit" value="{{ match.player1_points }}">
-                </form>        
-            </div>
 
-            <div class="player2">
-                <p>{{match.player2.player_name}}</p>
-                <form action="/update_score/{{ match.bracket_number }}/player2" method="POST">
-                    <input type="submit" value="{{ match.player2_points }}">
-                </form>
+    <div class="grid-container">
+        {% for match in matches[:24] %}   
+            <div id="bracket-{{ match.bracket_number }}" class="match-container">
+                <div class="player-container">{{ match.bracket_number }}</div>
+                <div class="player-container">
+                    <!-- Player name -->
+                    <div class="player">{{ match.player1.player_name | default('-', true) }}</div>
+                    <!-- Point counter -->
+                    <form action="/update_score/{{ match.bracket_number }}/player1" method="POST">
+                        <input type="submit" value="{{ match.player1_points }}">
+                    </form>        
+                </div>
+                <div class="player-container">
+                    <!-- Player name -->
+                    <div class="player">{{ match.player2.player_name | default('-', true)}}</div>
+                    <!-- Point counter -->
+                    <form action="/update_score/{{ match.bracket_number }}/player2" method="POST">
+                        <input type="submit" value="{{ match.player2_points }}">
+                    </form> 
+                </div>
             </div>
-        </div>
-    {% endfor %}   
+        {% endfor %}
     </div>
+    
 </body>

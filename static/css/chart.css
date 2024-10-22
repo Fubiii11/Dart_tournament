@@ -1,0 +1,69 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(10, 20vw); /* 10 columns to allow for space between rounds */
+    grid-template-rows: repeat(30, 50px);  /* More rows with less height for flexibility */
+    gap: 10px;  /* Reduced gap to make the brackets closer to each other */
+    justify-items: center;
+    align-items: center;
+    outline: 2px dashed red;
+}
+
+.match-container {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.player-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+    
+}
+
+.player {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* First 8 matches */
+#bracket-1 { grid-column: 1; grid-row: 1 / span 2; }
+#bracket-2 { grid-column: 1; grid-row: 3 / span 2; }
+#bracket-3 { grid-column: 1; grid-row: 5 / span 2; }
+#bracket-4 { grid-column: 1; grid-row: 7 / span 2; }
+#bracket-5 { grid-column: 1; grid-row: 9 / span 2; }
+#bracket-6 { grid-column: 1; grid-row: 11 / span 2; }
+#bracket-7 { grid-column: 1; grid-row: 13 / span 2; }
+#bracket-8 { grid-column: 1; grid-row: 15 / span 2; }
+
+/* First loser brackets */
+#bracket-9 { grid-column: 1; grid-row: 19 / span 2; }
+#bracket-10 { grid-column: 1; grid-row: 21 / span 2; }
+#bracket-11 { grid-column: 1; grid-row: 23 / span 2; }
+#bracket-12 { grid-column: 1; grid-row: 25 / span 2; }
+
+/* Next winner rounds */
+#bracket-13 { grid-column: 2; grid-row: 2 / span 3; }
+#bracket-14 { grid-column: 2; grid-row: 6 / span 3; }
+#bracket-15 { grid-column: 2; grid-row: 10 / span 3; }
+#bracket-16 { grid-column: 2; grid-row: 14 / span 3; }
+
+/* Next losers rounds */
+#bracket-17 { grid-column: 2; grid-row: 24 / span 3; }
+#bracket-18 { grid-column: 2; grid-row: 22 / span 3; }
+#bracket-19 { grid-column: 2; grid-row: 20 / span 3; }
+#bracket-20 { grid-column: 2; grid-row: 18 / span 3; }
+
+/* Middle losers brackets */
+#bracket-21 { grid-column: 3; grid-row: 23 / span 3; }
+#bracket-22 { grid-column: 3; grid-row: 19 / span 3; }
+
+/* Next winners rounds */
+#bracket-23 { grid-column: 3; grid-row: 4 / span 4; }
+#bracket-24 { grid-column: 3; grid-row: 12 / span 4; }
+
+/* Continue pattern for further brackets as necessary */
