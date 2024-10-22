@@ -13,7 +13,7 @@
     <div class="grid-container">
         {% for match in matches[:24] %}   
             <div id="bracket-{{ match.bracket_number }}" class="match-container">
-                <div class="player-container">{{ match.bracket_number }}</div>
+                <div class="bracket-number">{{ match.bracket_number }}</div>
                 <div class="player-container">
                     <!-- Player name -->
                     <div class="player">{{ match.player1.player_name | default('-', true) }}</div>

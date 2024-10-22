@@ -1,7 +1,7 @@
 .grid-container {
     display: grid;
     grid-template-columns: repeat(10, 20vw); /* 10 columns to allow for space between rounds */
-    grid-template-rows: repeat(30, 50px);  /* More rows with less height for flexibility */
+    grid-template-rows: repeat(30, 80px);  /* More rows with less height for flexibility */
     gap: 10px;  /* Reduced gap to make the brackets closer to each other */
     justify-items: center;
     align-items: center;
@@ -10,11 +10,20 @@
 
 .match-container {
     background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 150px;
+    border: 1px solid #000000;
+    padding: 15px;
+    width: 200px;
     text-align: center;
     border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the bracket number */
+.bracket-number {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px; /* Add spacing between bracket number and player info */
 }
 
 .player-container {
@@ -22,12 +31,14 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 5px;
-    
+
 }
 
 .player {
+    font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 5px;
+    color: #333;
+    margin-right: 10px; /* Add space between player name and point button */
 }
 
 /* First 8 matches */
