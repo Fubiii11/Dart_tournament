@@ -5,6 +5,8 @@ import pytz
 import random
 from config import get_secret_key
 from databases import *   # Import the db and models note: change * maybe
+from livereload import Server
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config['SECRET_KEY'] = get_secret_key()
@@ -391,4 +393,6 @@ def get_back_to_page():
     return render_template("double_elimination.html", matches = matches )
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    server = Server(app.wsgi_app)  # Use livereload's Server
+    server.serve(port=5000, host='127.0.0.1')
