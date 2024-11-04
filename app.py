@@ -6,6 +6,7 @@ import random
 from config import get_secret_key
 from databases import *   # Import the db and models note: change * maybe
 from livereload import Server
+from bracket_config import BRACKET_ADVANCEMENT
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
@@ -369,18 +370,35 @@ def point_and_bracket_handler(bracket_number, player):
     if player == 'player1':
         if match.player1_points == 2:
             match.player1_points = 0  # Reset if max score reached
+            db.session.commit()
             
         elif match.player1_points < 2 and match.player2_points != 2:
             match.player1_points += 1
+            db.session.commit()
+
+        # check if 2 points have been reached by player1 (player1 won)
+        if match.player1_points == 2:            
+            #Logic to write the player to his new bracket
+            match.winner_id = match.player1_id
+            match.match_finished = True
+            bracket_advance(match, 'player1')
+            
+
     elif player == 'player2':
         if match.player2_points == 2:
             match.player2_points = 0  # Reset if max score reached
+            db.session.commit()
         elif match.player2_points < 2 and match.player1_points != 2:
             match.player2_points += 1
+            db.session.commit()
         
-    # Transfer of the winner and looser in the new bracket
-    if match.player2_points == 2 or match.player1_points == 2:
-        pass    
+        # check if 2 points have been reached by player2
+        if match.player2_points == 2:
+            #Logic to write the player to his new bracket
+            match.winner_id = match.player2_id
+            match.match_finished = True
+            bracket_advance(match, 'player2')
+
     # Save changes to db
     db.session.commit()
 
@@ -392,7 +410,69 @@ def get_back_to_page():
     matches = TournamentMatch.query.all()
     return render_template("double_elimination.html", matches = matches )
 
+
+def bracket_advance(match, winner):
+    bracket_info = BRACKET_ADVANCEMENT.get(match.bracket_number)
+    if not bracket_info:
+        return  # No further brackets to advance
+
+    # Determine winner and loser IDs based on who won
+    if winner == 'player1':
+        winner_id = match.player1_id
+        loser_id = match.player2_id
+    else:
+        winner_id = match.player2_id
+        loser_id = match.player1_id
+
+    # Place the winner in the specified bracket and slot
+    winner_bracket = bracket_info["winner"]["bracket"]
+    winner_slot = bracket_info["winner"]["slot"]
+    winner_match = TournamentMatch.query.filter_by(bracket_number=winner_bracket).first()
+
+    if winner_match:
+        if winner_slot == "player1" and winner_match.player1_id is None:
+            winner_match.player1_id = winner_id
+        elif winner_slot == "player2" and winner_match.player2_id is None:
+            winner_match.player2_id = winner_id
+    else:
+        return "error"
+
+    # Place the loser in the specified bracket and slot (if there is a losers' bracket)
+    loser_bracket_info = bracket_info.get("loser")
+    if loser_bracket_info:
+        loser_bracket = loser_bracket_info["bracket"]
+        loser_slot = loser_bracket_info["slot"]
+        loser_match = TournamentMatch.query.filter_by(bracket_number=loser_bracket).first()
+
+        if loser_match:
+            if loser_slot == "player1" and loser_match.player1_id is None:
+                loser_match.player1_id = loser_id
+            elif loser_slot == "player2" and loser_match.player2_id is None:
+                loser_match.player2_id = loser_id
+
+    db.session.commit()
+
+    # still need to add the final rank and what happens if a player
+    # doesent advance because they lost or even won the whole thing
+
+
+
 if __name__ == '__main__':
     #app.run(debug=True)
     server = Server(app.wsgi_app)  # Use livereload's Server
     server.serve(port=5000, host='127.0.0.1')
+
+
+
+'''
+ notes:
+
+The groups page should not shuffle when the page is reloaded
+just if the shuffle button is pressed
+
+look into the players counter. if two or more players have the same points
+how is it decided who of them continues??
+
+BIG MISTAKE:: total points are the matches they won not the points they made
+
+'''
