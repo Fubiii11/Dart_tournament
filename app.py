@@ -429,6 +429,24 @@ def bracket_advance(match, winner):
     winner_slot = bracket_info["winner"]["slot"]
     winner_match = TournamentMatch.query.filter_by(bracket_number=winner_bracket).first()
 
+    #if the match is 30 (last or second last match)
+    if match.bracket_number == 30:
+        if winner == "player1":
+            #the game is finished player2 lost twice
+
+            
+
+        #if player2 won nothing happens and the player are getting written to the next bracket
+    # if there is a second match beeing played
+    if match.bracket_number == 31:
+        if winner == "player1":
+            #player1 won the tournament player2 is second
+        if winner == "player2":
+            #player2 won the tournmanet player1 is second
+
+
+
+
     if winner_match:
         if winner_slot == "player1" and winner_match.player1_id is None:
             winner_match.player1_id = winner_id
@@ -455,13 +473,10 @@ def bracket_advance(match, winner):
     # still need to add the final rank and what happens if a player
     # doesent advance because they lost or even won the whole thing
 
-
-
 if __name__ == '__main__':
     #app.run(debug=True)
     server = Server(app.wsgi_app)  # Use livereload's Server
     server.serve(port=5000, host='127.0.0.1')
-
 
 
 '''
@@ -474,5 +489,7 @@ look into the players counter. if two or more players have the same points
 how is it decided who of them continues??
 
 BIG MISTAKE:: total points are the matches they won not the points they made
+
+The players in the matches that are already finished can still change theyr score
 
 '''

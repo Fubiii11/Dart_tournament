@@ -39,5 +39,5 @@ BRACKET_ADVANCEMENT = {
     29: {"winner": {"bracket": 30, "slot": "player2"}, "loser": None, "final_rank": "3"},
 
     # Last game determining the tournament winner and second place
-    30: {"winner": {"bracket": 3, "slot": "player1"}, "loser": {"bracket": 6, "slot": "player2"}, "final_rank": "2"},
+    30: {"winner": {"bracket": 31, "slot": "player1"}, "loser": {"bracket": 31, "slot": "player2"}, "final_rank": None},
 }
