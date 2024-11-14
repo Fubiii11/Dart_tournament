@@ -410,7 +410,7 @@ def get_back_to_page():
     matches = TournamentMatch.query.all()
     return render_template("double_elimination.html", matches = matches )
 
-
+# Handle how the players advance to the next match
 def bracket_advance(match, winner):
     bracket_info = BRACKET_ADVANCEMENT.get(match.bracket_number)
     if not bracket_info:
@@ -424,49 +424,59 @@ def bracket_advance(match, winner):
         winner_id = match.player2_id
         loser_id = match.player1_id
 
+    # Update winner int he match records
+    # note: might be unnecessary i have to check if i even use this else i could save data
+    match.winner_id = winner_id
+    match.match_finished = True
+
+    # Handle special cases for the final matches
+    # If the match is 30 (last or second last match)
+    if match.bracket_number == 30:
+        if winner == "player1":
+            # The game is finished player2 lost twice
+            TournamentPlayer.query.filter_by(player_id=loser_id).update({"final_rank": 2})
+            TournamentPlayer.query.filter_by(player_id=winner_id).update({"final_rank": 1})
+            db.session.commit()
+            return
+            #if player2 won nothing happens and the player are getting written to the next bracket
+    
+    # if there is a second match beeing played
+    elif match.bracket_number == 31:
+        #player1 won the tournament player2 is second
+        TournamentPlayer.query.filter_by(player_id=winner_id).update({"final_rank": 1})
+        TournamentPlayer.query.filter_by(player_id=loser_id).update({"final_rank": 2})
+        db.session.commit()
+        return
+
     # Place the winner in the specified bracket and slot
     winner_bracket = bracket_info["winner"]["bracket"]
     winner_slot = bracket_info["winner"]["slot"]
     winner_match = TournamentMatch.query.filter_by(bracket_number=winner_bracket).first()
-
-    #if the match is 30 (last or second last match)
-    if match.bracket_number == 30:
-        if winner == "player1":
-            #the game is finished player2 lost twice
-
-            
-
-        #if player2 won nothing happens and the player are getting written to the next bracket
-    # if there is a second match beeing played
-    if match.bracket_number == 31:
-        if winner == "player1":
-            #player1 won the tournament player2 is second
-        if winner == "player2":
-            #player2 won the tournmanet player1 is second
-
-
-
-
+                 
     if winner_match:
         if winner_slot == "player1" and winner_match.player1_id is None:
             winner_match.player1_id = winner_id
         elif winner_slot == "player2" and winner_match.player2_id is None:
             winner_match.player2_id = winner_id
     else:
-        return "error"
+        return
 
     # Place the loser in the specified bracket and slot (if there is a losers' bracket)
     loser_bracket_info = bracket_info.get("loser")
     if loser_bracket_info:
         loser_bracket = loser_bracket_info["bracket"]
         loser_slot = loser_bracket_info["slot"]
+        final_rank = loser_bracket_info["final_rank"]
         loser_match = TournamentMatch.query.filter_by(bracket_number=loser_bracket).first()
-
-        if loser_match:
+        if final_rank:
+            TournamentPlayer.query.filter_by(player_id=loser_id).update({"final_rank": final_rank})
+            db.session.commit()
+        elif loser_match:
             if loser_slot == "player1" and loser_match.player1_id is None:
                 loser_match.player1_id = loser_id
             elif loser_slot == "player2" and loser_match.player2_id is None:
                 loser_match.player2_id = loser_id
+            
 
     db.session.commit()
 
