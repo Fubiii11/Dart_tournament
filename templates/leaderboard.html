@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chart.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Double-elimination bracket</title>
+    <title>Leaderboard</title>
     <script>
         // Save the scroll position when the page is unloaded (i.e., before reloading)
         window.onbeforeunload = function() {
@@ -23,15 +23,26 @@
         </script>
 </head>
 <body>    
-    <h1> Leaderboard </h1>
-    <table>
-        <tr>    
-            <th>Name</th>
-            <th>Rank</th>
-        </tr>
-        <tr>
-            <td>test</td>
-            <td>11111</td>
-        </tr>    
-    </table>
+    <div>
+        <h1 class="center_text">Tournament Leaderboard</h1>
+        
+        <table class="player_table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player Name</th>
+                    <th>Player ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in leaderboard %}
+                    <tr>
+                        <td>{{ player.final_rank }}</td>
+                        <td>{{ player.player_name }}</td>
+                        <td>{{ player.player_id }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>

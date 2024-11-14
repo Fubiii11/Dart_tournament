@@ -402,7 +402,15 @@ def point_and_bracket_handler(bracket_number, player):
     # Save changes to db
     db.session.commit()
 
-    # Redirect back to the page
+    # check if the game is finished and display the leaderboard
+    champion = TournamentPlayer.query.filter_by(final_rank = 1).first()
+    runner_up = TournamentPlayer.query.filter_by(final_rank = 2).first()
+
+    if champion and runner_up:
+        leaderboard_data = TournamentPlayer.query.order_by(TournamentPlayer.final_rank).all()
+        return render_template('leaderboard.html', leaderboard=leaderboard_data)
+
+    # Redirect back to the page if the game is not yet finished
     return redirect("/tournament/start2")
 
 @app.route("/tournament/start2", methods = ["GET"])
@@ -466,7 +474,7 @@ def bracket_advance(match, winner):
     if loser_bracket_info:
         loser_bracket = loser_bracket_info["bracket"]
         loser_slot = loser_bracket_info["slot"]
-        final_rank = loser_bracket_info["final_rank"]
+        final_rank = bracket_info["final_rank"]
         loser_match = TournamentMatch.query.filter_by(bracket_number=loser_bracket).first()
         if final_rank:
             TournamentPlayer.query.filter_by(player_id=loser_id).update({"final_rank": final_rank})
