@@ -1,8 +1,0 @@
-<div class="bracket-container"></div>    
-{% for match in matches%}
-    <div class="match">
-        <div class="player1">
-            <p>{{match.player1.player_name}}</p>
-            <form action="/update_score/{{ match.bracket_number }}/player1" method="POST">
-                <input type="submit" value="{{ match.player1_points }}">
-            </form>        
