@@ -403,11 +403,11 @@ def point_and_bracket_handler(bracket_number, player):
     db.session.commit()
 
     # check if the game is finished and display the leaderboard
-    champion = TournamentPlayer.query.filter_by(final_rank = 1).first()
-    runner_up = TournamentPlayer.query.filter_by(final_rank = 2).first()
+    champion = TournamentPlayer.query.filter_by(final_rank = "1").first()
+    runner_up = TournamentPlayer.query.filter_by(final_rank = "2").first()
 
     if champion and runner_up:
-        leaderboard_data = TournamentPlayer.query.order_by(TournamentPlayer.final_rank).all()
+        leaderboard_data = TournamentPlayer.query.order_by(TournamentPlayer.rank_order).all()
         return render_template('leaderboard.html', leaderboard=leaderboard_data)
 
     # Redirect back to the page if the game is not yet finished
@@ -443,9 +443,11 @@ def bracket_advance(match, winner):
         if winner == "player1":
             # The game is finished player2 lost twice
             loser = TournamentPlayer.query.filter_by(player_id=loser_id).first()
-            loser.final_rank = 2
+            loser.final_rank = "2"
+            loser.rank_order = 2
             winner = TournamentPlayer.query.filter_by(player_id=winner_id).first()
-            winner.final_rank = 1
+            winner.final_rank = "1"
+            winner.rank_order = 1
             db.session.commit()
             return
             #if player2 won nothing happens and the player are getting written to the next bracket
@@ -454,9 +456,11 @@ def bracket_advance(match, winner):
     elif match.bracket_number == 31:
         #player1 won the tournament player2 is second
             loser = TournamentPlayer.query.filter_by(player_id=loser_id).first()
-            loser.final_rank = 2
+            loser.final_rank = "2"
+            loser.rank_order = 2
             winner = TournamentPlayer.query.filter_by(player_id=winner_id).first()
-            winner.final_rank = 1
+            winner.final_rank = "1"
+            winner.rank_order = 1
             db.session.commit()
             return
 
@@ -483,6 +487,9 @@ def bracket_advance(match, winner):
         if final_rank:
             lost_player = TournamentPlayer.query.filter_by(player_id=loser_id)
             lost_player.final_rank = final_rank
+            # Parse rank range for "rank_order"
+            rank_order = int(final_rank.split('-')[0]) if '-' in final_rank else int(final_rank)
+            lost_player.rank_order = rank_order
             db.session.commit()
         elif loser_match:
             if loser_slot == "player1" and loser_match.player1_id is None:

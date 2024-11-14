@@ -63,7 +63,7 @@ class TournamentPlayer(db.Model):
     player_name = db.Column(db.String(100), nullable=False)
     player_id = db.Column(db.Integer, unique=True, nullable=False)
     final_rank = db.Column(db.String(20), nullable=True)
-
+    rank_order = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return f"<TournamentPlayer {self.player_name} (ID: {self.player_id}) - Rank: {self.final_rank}>"
