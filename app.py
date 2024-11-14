@@ -442,8 +442,10 @@ def bracket_advance(match, winner):
     if match.bracket_number == 30:
         if winner == "player1":
             # The game is finished player2 lost twice
-            TournamentPlayer.query.filter_by(player_id=loser_id).update({"final_rank": 2})
-            TournamentPlayer.query.filter_by(player_id=winner_id).update({"final_rank": 1})
+            loser = TournamentPlayer.query.filter_by(player_id=loser_id).first()
+            loser.final_rank = 2
+            winner = TournamentPlayer.query.filter_by(player_id=winner_id).first()
+            winner.final_rank = 1
             db.session.commit()
             return
             #if player2 won nothing happens and the player are getting written to the next bracket
@@ -451,10 +453,12 @@ def bracket_advance(match, winner):
     # if there is a second match beeing played
     elif match.bracket_number == 31:
         #player1 won the tournament player2 is second
-        TournamentPlayer.query.filter_by(player_id=winner_id).update({"final_rank": 1})
-        TournamentPlayer.query.filter_by(player_id=loser_id).update({"final_rank": 2})
-        db.session.commit()
-        return
+            loser = TournamentPlayer.query.filter_by(player_id=loser_id).first()
+            loser.final_rank = 2
+            winner = TournamentPlayer.query.filter_by(player_id=winner_id).first()
+            winner.final_rank = 1
+            db.session.commit()
+            return
 
     # Place the winner in the specified bracket and slot
     winner_bracket = bracket_info["winner"]["bracket"]
@@ -477,7 +481,8 @@ def bracket_advance(match, winner):
         final_rank = bracket_info["final_rank"]
         loser_match = TournamentMatch.query.filter_by(bracket_number=loser_bracket).first()
         if final_rank:
-            TournamentPlayer.query.filter_by(player_id=loser_id).update({"final_rank": final_rank})
+            lost_player = TournamentPlayer.query.filter_by(player_id=loser_id)
+            lost_player.final_rank = final_rank
             db.session.commit()
         elif loser_match:
             if loser_slot == "player1" and loser_match.player1_id is None:
@@ -506,8 +511,13 @@ just if the shuffle button is pressed
 look into the players counter. if two or more players have the same points
 how is it decided who of them continues??
 
-BIG MISTAKE:: total points are the matches they won not the points they made
+if two players have the same amount of points who goes to the finale
 
 The players in the matches that are already finished can still change theyr score
 
+The start button of the first matches can still be pressed when the games are finished
+it should not be pressed if there are already 2 points in one of the two players
+
+The final rank gets safed as a string but not for 1 and 2 and how can i sort if it is a string
+and not a number
 '''
