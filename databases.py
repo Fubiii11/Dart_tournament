@@ -66,7 +66,7 @@ class TournamentPlayer(db.Model):
     rank_order = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        return f"<TournamentPlayer {self.player_name} (ID: {self.player_id}) - Rank: {self.final_rank}>"
+        return f"<TournamentPlayer {self.player_name} (ID: {self.player_id}) - Rank: {self.final_rank} - rank_order: {self.rank_order}>"
 
 class TournamentMatch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
