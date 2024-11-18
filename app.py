@@ -457,15 +457,14 @@ def bracket_advance(match, winner):
             #if player2 won nothing happens and the player are getting written to the next bracket
     
     # if there is a second match beeing played
-    elif match.bracket_number == 31:
-            
+    elif match.bracket_number == 31:            
         #player1 won the tournament player2 is second
-            loserplayer_id.final_rank = "2"
-            loserplayer_id.rank_order = 2
-            winnerplayer_id.final_rank = "1"
-            winnerplayer_id.rank_order = 1
-            db.session.commit()
-            return
+        loserplayer_id.final_rank = "2"
+        loserplayer_id.rank_order = 2
+        winnerplayer_id.final_rank = "1"
+        winnerplayer_id.rank_order = 1
+        db.session.commit()
+        return
 
     # Place the winner in the specified bracket and slot
     winner_bracket = bracket_info["winner"]["bracket"]
