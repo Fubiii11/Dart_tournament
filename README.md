@@ -20,8 +20,9 @@ The Dart Tournament Website is designed to help players organize and participate
 - View standings and results.
 - Manage players and teams.
 
+---
 
-### Tournament Format
+## Tournament Format
 
 The tournament is divided into two parts:
 
