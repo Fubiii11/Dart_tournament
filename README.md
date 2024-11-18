@@ -4,12 +4,10 @@ Welcome to the **Dart Tournament Website**! This project is a web application bu
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
-2. [Features](#features)
-3. [Tech Stack](#tech-stack)
-4. [Setup and Installation](#setup-and-installation)
-5. [Usage](#usage)
-6. [Contributing](#contributing)
-7. [License](#license)
+2. [Tournament Format](#tournament_format)
+3. [Features](#features)
+4. [Tech Stack](#tech-stack)
+5. [Setup and Installation](#setup-and-installation)
 
 ---
 
@@ -22,8 +20,19 @@ The Dart Tournament Website is designed to help players organize and participate
 - View standings and results.
 - Manage players and teams.
 
-The website is built using **Flask**, a Python web framework, and is fully customizable to handle various types of dart tournaments.
 
+### Tournament Format
+
+The tournament is divided into two parts:
+
+1. **Group Stage**: 
+   - Players are divided into groups where everyone plays against everyone else. 
+   - Points are awarded based on match results, and the top players from each group advance to the next round.
+
+2. **Double Elimination Round**: 
+   - The 16 best players from the group stage advance to the double elimination bracket.
+   - Players in this round compete in a knockout format, with a loser’s bracket that gives eliminated players a second chance.
+   - The final winner is determined through this elimination process.
 ---
 
 ## Features
