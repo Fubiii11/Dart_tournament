@@ -21,7 +21,6 @@ def create_db_if_not_exists():
         with app.app_context():
             db.create_all()  # Create all tables
             print("Database created.")
-
 create_db_if_not_exists()  # Call this function only once when starting the app
 
 # Function to convert UTC to Zurich time
