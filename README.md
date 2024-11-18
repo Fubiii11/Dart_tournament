@@ -76,3 +76,25 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
+### 3. Install dependencies
+Once the virtual environment is activated, install the required dependencies from the requirements.txt file:
+
+```bash
+pip install -r requirements.txt
+```
+### 4. Set up the database
+The application uses a simple SQLite database. You can set it up by running the following:
+
+```bash
+python setup_db.py
+```
+This will create the necessary database tables for your tournament app.
+
+### 5. Run the application
+Finally, you can run the Flask development server:
+
+```bash
+python app.py
+```
+The website will be available at http://127.0.0.1:5000/ in your browser.
+
