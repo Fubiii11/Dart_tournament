@@ -87,7 +87,7 @@ def toggle_presence(id):
     except:
         return "We could not set this player to ready"
     
-# note: delete this at the end just for testing
+# note: delete this at the end just for testing (below)
 @app.route("/fill/test", methods=["POST"])
 def fill_testcases():
     for i in range(1,25):
@@ -423,8 +423,8 @@ def get_back_to_page():
 # Handle how the players advance to the next match
 def bracket_advance(match, winner):
     bracket_info = BRACKET_ADVANCEMENT.get(match.bracket_number)
-    if not bracket_info:
-        return  # No further brackets to advance
+    print(winner)
+    print(match)
 
     # Determine winner and loser IDs based on who won
     if winner == 'player1':
@@ -445,6 +445,8 @@ def bracket_advance(match, winner):
 
     # Handle special cases for the final matches
     # If the match is 30 (last or second last match)
+
+    print(match.bracket_number)
     if match.bracket_number == 30:
         if winner == "player1":
             # The game is finished player2 lost twice
@@ -454,18 +456,19 @@ def bracket_advance(match, winner):
             winnerplayer_id.rank_order = 1
             db.session.commit()
             return
-            #if player2 won nothing happens and the player are getting written to the next bracket
+            # if player2 won nothing happens and the player are getting written to the next bracket
     
     # if there is a second match beeing played
+    
     elif match.bracket_number == 31:            
-        #player1 won the tournament player2 is second
+        print("test")
         loserplayer_id.final_rank = "2"
         loserplayer_id.rank_order = 2
         winnerplayer_id.final_rank = "1"
         winnerplayer_id.rank_order = 1
         db.session.commit()
         return
-
+    
     # Place the winner in the specified bracket and slot
     winner_bracket = bracket_info["winner"]["bracket"]
     winner_slot = bracket_info["winner"]["slot"]
@@ -479,30 +482,31 @@ def bracket_advance(match, winner):
     else:
         return
 
-    # Place the loser in the specified bracket and slot (if there is a losers' bracket)
+    # Place the loser in the specified bracket and slot
     loser_bracket_info = bracket_info.get("loser")
-    if loser_bracket_info:
+    if loser_bracket_info: #if there is no loser bracket info the final rank cant be set
         loser_bracket = loser_bracket_info["bracket"]
         loser_slot = loser_bracket_info["slot"]
-        final_rank = bracket_info["final_rank"]
         loser_match = TournamentMatch.query.filter_by(bracket_number=loser_bracket).first()
-        if final_rank:
+        
+        if loser_match:
+            if loser_slot == "player1" and loser_match.player1_id is None:
+                loser_match.player1_id = loser_id
+            elif loser_slot == "player2" and loser_match.player2_id is None:
+                loser_match.player2_id = loser_id
+    
+    # Assigne the final rank
+    else:
+        final_rank = bracket_info.get("final_rank")
+        if final_rank != None:
+            print(final_rank)
             loserplayer_id.final_rank = final_rank
             # Parse rank range for "rank_order"
             rank_order = int(final_rank.split('-')[0]) if '-' in final_rank else int(final_rank)
             loserplayer_id.rank_order = rank_order
             db.session.commit()
-        elif loser_match:
-            if loser_slot == "player1" and loser_match.player1_id is None:
-                loser_match.player1_id = loser_id
-            elif loser_slot == "player2" and loser_match.player2_id is None:
-                loser_match.player2_id = loser_id
-            
 
     db.session.commit()
-
-    # still need to add the final rank and what happens if a player
-    # doesent advance because they lost or even won the whole thing
 
 if __name__ == '__main__':
     #app.run(debug=True)
