@@ -57,5 +57,22 @@ First, clone the project repository to your local machine:
 ```bash
 git clone https://github.com/yourusername/dart-tournament-website.git
 cd dart-tournament-website
+```
 
+### 2. Create a virtual environment (recommended)
+
+Create and activate a virtual environment:
+
+On Windows:
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+On macOS/Linux:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
