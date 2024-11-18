@@ -31,7 +31,7 @@
                 <tr>
                     <th>Rank</th>
                     <th>Player Name</th>
-                    <th>Player ID</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +39,17 @@
                     <tr>
                         <td>{{ player.final_rank }}</td>
                         <td>{{ player.player_name }}</td>
-                        <td>{{ player.player_id }}</td>
+                        <td>
+                            {% if player.final_rank == "1" %}
+                                🥇 Gold Medal
+                            {% elif player.final_rank == "2" %}
+                                🥈 Silver Medal
+                            {% elif player.final_rank == "3" %}
+                                🥉 Bronze Medal
+                            {% else %}
+                                ---
+                            {% endif %} 
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

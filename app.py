@@ -423,8 +423,6 @@ def get_back_to_page():
 # Handle how the players advance to the next match
 def bracket_advance(match, winner):
     bracket_info = BRACKET_ADVANCEMENT.get(match.bracket_number)
-    print(winner)
-    print(match)
 
     # Determine winner and loser IDs based on who won
     if winner == 'player1':
@@ -445,8 +443,6 @@ def bracket_advance(match, winner):
 
     # Handle special cases for the final matches
     # If the match is 30 (last or second last match)
-
-    print(match.bracket_number)
     if match.bracket_number == 30:
         if winner == "player1":
             # The game is finished player2 lost twice
@@ -457,9 +453,8 @@ def bracket_advance(match, winner):
             db.session.commit()
             return
             # if player2 won nothing happens and the player are getting written to the next bracket
-    
+
     # if there is a second match beeing played
-    
     elif match.bracket_number == 31:            
         print("test")
         loserplayer_id.final_rank = "2"
