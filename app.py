@@ -43,7 +43,7 @@ def index():
         
         except:
             return "There was an issue adding this player"
-
+        
     else:
         players = Dart.query.order_by(Dart.date_created).all()
         for player in players:
@@ -51,11 +51,10 @@ def index():
 
         #count the players
         total_players = Dart.query.count()
-
         present_players = Dart.query.filter_by(present=True).count()
 
-
-
+        # Removes the groups sesison if there is one
+        session.pop("groups", None)
         return render_template("index.html", players=players, total_players=total_players, present_players=present_players)
     
 @app.route("/delete/<int:id>", methods=["POST"])
@@ -115,28 +114,33 @@ def start_game():
 
 @app.route("/game/<int:number_of_groups>", methods=["GET"])
 def game(number_of_groups):
-    #get all present players
-    present_players = Dart.query.filter_by(present=True).all()
-    player_names = [player.player for player in present_players]
 
-    # Shuffle players and create groups
-    random.shuffle(player_names)
-    
-    # Calculate number of players per group
-    players_per_group = len(player_names) // number_of_groups
-    groups = []
-    
-    for i in range(number_of_groups):
-        # Create a group and append to groups list
-        group = player_names[i * players_per_group: (i + 1) * players_per_group]
-        groups.append(group)
+    if "groups" in session:
+        groups = session["groups"]
+    else:
+        #get all present players
+        present_players = Dart.query.filter_by(present=True).all()
+        player_names = [player.player for player in present_players]
 
-    session["groups"] = groups
+        # Shuffle players and create groups
+        random.shuffle(player_names)
+        
+        # Calculate number of players per group
+        players_per_group = len(player_names) // number_of_groups
+        groups = []
+        
+        for i in range(number_of_groups):
+            # Create a group and append to groups list
+            group = player_names[i * players_per_group: (i + 1) * players_per_group]
+            groups.append(group)
+
+        session["groups"] = groups
 
     return render_template("groups.html", groups=groups, number_of_groups=number_of_groups)
 
 @app.route("/randomize/<int:number_of_groups>", methods=["POST"])
 def randomize_groups(number_of_groups):
+    session.pop("groups", None)
     return redirect(url_for("game", number_of_groups=number_of_groups))
 
 
@@ -511,9 +515,6 @@ if __name__ == '__main__':
 
 '''
  notes:
-
-The groups page should not shuffle when the page is reloaded
-just if the shuffle button is pressed
 
 look into the players counter. if two or more players have the same points
 how is it decided who of them continues??
