@@ -4,7 +4,7 @@ Welcome to the **Dart Tournament Website**! This project is a web application bu
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
-2. [Tournament Format](#tournament_format)
+2. [Tournament Format](#tournament-format)
 3. [Features](#features)
 4. [Tech Stack](#tech-stack)
 5. [Setup and Installation](#setup-and-installation)
