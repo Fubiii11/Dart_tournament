@@ -47,6 +47,7 @@ The tournament is divided into two parts:
 ---
 
 ## Tech Stack
+Wrote using python 3.12.7
 
 The website is built using the following technologies:
 
@@ -58,6 +59,8 @@ The website is built using the following technologies:
 ---
 
 ## Setup and Installation
+for the installation you need to have python.
+I used python 3.12.7 to write the programm
 
 To set up the project locally, follow these steps:
 
