@@ -5,5 +5,5 @@ test.html
 test.css
 # Ignore the secret_key for the session
 secret_key.txt
-instance
+instance/
 __pycache__
