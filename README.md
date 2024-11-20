@@ -68,7 +68,7 @@ To set up the project locally, follow these steps:
 
 First, clone the project repository to your local machine:
 ```bash
-git clone https://github.com/yourusername/dart-tournament-website.git
+git clone https://github.com/fubiii11/dart-tournament-website.git
 cd dart-tournament-website
 ```
 
