@@ -88,7 +88,7 @@ def toggle_presence(id):
 # note: delete this at the end just for testing (below)
 @app.route("/fill/test", methods=["POST"])
 def fill_testcases():
-    for i in range(1,25):
+    for i in range(0,16):
         player_content = "player" + str(i)
         new_player = Dart(player = player_content, present = True)
         try:
