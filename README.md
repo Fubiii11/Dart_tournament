@@ -54,7 +54,7 @@ The website is built using the following technologies:
 - **Flask**: A lightweight Python web framework for handling the server-side logic.
 - **HTML/CSS**: For front-end design and layout.
 - **JavaScript**: For interactive features on the front-end.
-- **SQLite**: A simple database to store tournament and player data (you can switch to a more robust database like PostgreSQL or MySQL if needed).
+- **SQLite**: A simple database to store tournament and player data
 
 ---
 
