@@ -68,10 +68,11 @@ To set up the project locally, follow these steps:
 
 First, clone the project repository to your local machine:
 ```bash
-git clone https://github.com/yourusername/dart-tournament-website.git
+git clone https://github.com/Fubiii11/Dart_tournament.git
 cd dart-tournament-website
 ```
-
+or download it as a zip file and extract it
+The choice is yours
 ### 2. Create a virtual environment (recommended)
 
 Create and activate a virtual environment:
@@ -95,15 +96,8 @@ Once the virtual environment is activated, install the required dependencies fro
 ```bash
 pip install -r requirements.txt
 ```
-### 4. Set up the database
-The application uses a simple SQLite database. You can set it up by running the following:
 
-```bash
-python setup_db.py
-```
-This will create the necessary database tables for your tournament app.
-
-### 5. Run the application
+### 4. Run the application
 Finally, you can run the Flask development server:
 
 ```bash
