@@ -59,8 +59,9 @@ The website is built using the following technologies:
 ---
 
 ## Setup and Installation
-for the installation you need to have python.
+For this project you need to have python.
 I used python 3.12.7 to write the programm
+Download python 3.12 if you dont already got it installed
 
 To set up the project locally, follow these steps:
 
