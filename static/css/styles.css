@@ -140,11 +140,13 @@ th, td {
     height: 100%; 
     cursor: pointer; 
     text-align: center; 
-    font-size: 1vw;"
+    font-size: 1vw;
 }
 
 .little_undertitle{
-    text-align: center;
+    margin-inline: auto;
+    max-width: fit-content;
+    font-size: 1vw
 }
 
 .list{
