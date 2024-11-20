@@ -102,15 +102,20 @@ def fill_testcases():
 def start_game():
     numbers = []
     present_players = Dart.query.filter_by(present=True).count()
+    
 
     #find all valid divisors of present_players (ignoring 0)
-    if present_players > 1:
+    if present_players > 15:
         for i in range(2, present_players):
             if present_players % i == 0:
                 numbers.append(i)
     
-    return render_template("start_game.html",present_players=present_players, numbers = numbers)
-
+        return render_template("start_game.html",present_players=present_players, numbers = numbers)
+    else:
+        # Flash: Message, categorie (needs javascript in the html file)
+        flash("There arent enough players", "playeramount_error")
+        return redirect("/")
+        
 @app.route("/game/<int:number_of_groups>", methods=["GET"])
 def game(number_of_groups):
 
@@ -507,9 +512,9 @@ def bracket_advance(match, winner):
     db.session.commit()
 
 if __name__ == '__main__':
-    #app.run(debug=True)
-    server = Server(app.wsgi_app)  # Use livereload's Server
-    server.serve(port=5000, host='127.0.0.1')
+    app.run(debug=True)
+    #server = Server(app.wsgi_app)  # Use livereload's Server
+    #server.serve(port=5000, host='127.0.0.1')
 
 
 '''
@@ -527,4 +532,6 @@ it should not be pressed if there are already 2 points in one of the two players
 
 The final rank gets safed as a string but not for 1 and 2 and how can i sort if it is a string
 and not a number
+
+In the case that there arent 16 players to start with give an error message
 '''

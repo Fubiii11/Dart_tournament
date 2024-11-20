@@ -22,6 +22,19 @@
         </script>
 </head>
 <body>
+    <!-- Flash Message Handling (with alerts for JavaScript) -->
+    <script>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == "playeramount_error" %}
+                        alert("{{ message }}");  // Show alert for each flashed message
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
+
     <div class="content">
         <h1 class="title">Dart Tournament</h1>
         <p class="little_undertitle">Programm by Fabian Haumüller</p>
