@@ -512,9 +512,9 @@ def bracket_advance(match, winner):
     db.session.commit()
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    #server = Server(app.wsgi_app)  # Use livereload's Server
-    #server.serve(port=5000, host='127.0.0.1')
+    #app.run(debug=True)
+    server = Server(app.wsgi_app)  # Use livereload's Server
+    server.serve(port=5000, host='127.0.0.1')
 
 
 '''

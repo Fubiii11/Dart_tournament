@@ -1,26 +1,25 @@
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(10, 13vw); /* 10 columns to allow for space between rounds */
-    grid-template-rows: repeat(30, 9vh);  /* More rows with less height for flexibility */
-    gap: 10px;  /* Reduced gap to make the brackets closer to each other */
+    grid-template-columns: repeat(10, 12vw); /* 10 columns to allow for space between rounds */
+    grid-template-rows: repeat(30, 4vh);  /* More rows with less height for flexibility */
+    gap: 6px;  /* Reduced gap to make the brackets closer to each other */
     justify-items: center;
     align-items: center;
-    outline: 2px dashed red;
     position: relative;
 }
 
 .match-container {
     background-color: #f0f0f0;
     border: 1px solid #000000;
-    padding: 0.6vw;
-    width: 11vw;
+    padding: 0.35vw;
+    width:11vw;
     text-align: center;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
-/* Styling for the bracket number */
+/* Styling for the bracket number note: removed it for more space*/
 .bracket-number {
     font-size: 1.5em;
     font-weight: bold;
@@ -32,38 +31,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 0.3vw;
 
 }
 
 .player {
-    font-size: 1.2em;
+    font-size: 1vw;
     font-weight: bold;
     color: #333;
-    margin-right: 10px; /* Add space between player name and point button */
+    margin-right: 0.6vw; /* Add space between player name and point button */
 }
 
-/* Adding horizontal lines to connect brackets */
-.match-container::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: -40%; /* Adjust this value to extend the line length */
-    width: 40%; /* Width of the line */
-    height: 3%; /* Thickness of the line */
-    background-color: black;
-}
 
-/* Adding vertical lines to connect brackets */
-.match-container::before {
-    content: '';
-    position: absolute;
-    left: 18vw;
-    top: -50px; /* Adjust to position the vertical line */
-    width: 2px;
-    height: 50px; /* Adjust the height based on grid row spacing */
-    background-color: black;
-}
 
 
 /* First 8 matches */
