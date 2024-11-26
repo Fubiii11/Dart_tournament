@@ -28,6 +28,7 @@
     <div class="grid-container">
 
         <div class="bracket-label" id="winner-label">Winner Bracket</div>
+        <div class="bracket-label" id="loser-label">Loser Bracket</div>
 
         {% for match in matches %}   
             <div id="bracket-{{ match.bracket_number }}" class="match-container">
@@ -37,7 +38,9 @@
                     <!-- Point counter only show when players are entered-->
                      {% if match.player1 and match.player2 %}
                         <form action="/update_score/{{ match.bracket_number }}/player1" method="POST">
-                            <input type="submit" value="{{ match.player1_points }}">
+                            <input type="submit" 
+                            value="{{ match.player1_points }}"
+                            {% if match.match_finished %}disabled{% endif %}>
                         </form>        
                     {% endif %}
                 </div>
@@ -47,7 +50,9 @@
                     <!-- Point counter only show when players are entered-->
                     {% if match.player1 and match.player2 %}
                         <form action="/update_score/{{ match.bracket_number }}/player2" method="POST">
-                            <input type="submit" value="{{ match.player2_points }}">
+                            <input type="submit" 
+                            value="{{ match.player2_points }}"
+                            {% if match.match_finished %}disabled{% endif %}>
                         </form> 
                     {% endif %}
                 </div>

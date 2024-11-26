@@ -46,49 +46,100 @@
 
 
 /* First 8 matches */
-#bracket-1 { grid-column: 1; grid-row: 1 / span 2; }
-#bracket-2 { grid-column: 1; grid-row: 3 / span 2; }
-#bracket-3 { grid-column: 1; grid-row: 5 / span 2; }
-#bracket-4 { grid-column: 1; grid-row: 7 / span 2; }
-#bracket-5 { grid-column: 1; grid-row: 9 / span 2; }
-#bracket-6 { grid-column: 1; grid-row: 11 / span 2; }
-#bracket-7 { grid-column: 1; grid-row: 13 / span 2; }
-#bracket-8 { grid-column: 1; grid-row: 15 / span 2; }
+#bracket-1 { grid-column: 1; grid-row: 3 / span 2; }
+#bracket-2 { grid-column: 1; grid-row: 5 / span 2; }
+#bracket-3 { grid-column: 1; grid-row: 7 / span 2; }
+#bracket-4 { grid-column: 1; grid-row: 9 / span 2; }
+#bracket-5 { grid-column: 1; grid-row: 11 / span 2; }
+#bracket-6 { grid-column: 1; grid-row: 13 / span 2; }
+#bracket-7 { grid-column: 1; grid-row: 15 / span 2; }
+#bracket-8 { grid-column: 1; grid-row: 17 / span 2; }
 
 /* First loser brackets */
-#bracket-9 { grid-column: 1; grid-row: 19 / span 2; }
-#bracket-10 { grid-column: 1; grid-row: 21 / span 2; }
-#bracket-11 { grid-column: 1; grid-row: 23 / span 2; }
-#bracket-12 { grid-column: 1; grid-row: 25 / span 2; }
+#bracket-9 { grid-column: 1; grid-row: 22 / span 2; }
+#bracket-10 { grid-column: 1; grid-row: 24 / span 2; }
+#bracket-11 { grid-column: 1; grid-row: 26 / span 2; }
+#bracket-12 { grid-column: 1; grid-row: 28 / span 2; }
 
 /* Next winner rounds */
-#bracket-13 { grid-column: 2; grid-row: 2 / span 2; }
-#bracket-14 { grid-column: 2; grid-row: 6 / span 2; }
-#bracket-15 { grid-column: 2; grid-row: 10 / span 2; }
-#bracket-16 { grid-column: 2; grid-row: 14 / span 2; }
+#bracket-13 { grid-column: 2; grid-row: 4 / span 2; }
+#bracket-14 { grid-column: 2; grid-row: 8 / span 2; }
+#bracket-15 { grid-column: 2; grid-row: 12 / span 2; }
+#bracket-16 { grid-column: 2; grid-row: 16 / span 2; }
 
 /* Next losers rounds */
-#bracket-17 { grid-column: 2; grid-row: 24 / span 3; }
-#bracket-18 { grid-column: 2; grid-row: 22 / span 3; }
-#bracket-19 { grid-column: 2; grid-row: 20 / span 3; }
-#bracket-20 { grid-column: 2; grid-row: 18 / span 3; }
+#bracket-17 { grid-column: 2; grid-row: 27 / span 3; }
+#bracket-18 { grid-column: 2; grid-row: 25 / span 3; }
+#bracket-19 { grid-column: 2; grid-row: 23 / span 3; }
+#bracket-20 { grid-column: 2; grid-row: 21 / span 3; }
 
 /* Middle losers brackets */
-#bracket-21 { grid-column: 3; grid-row: 23 / span 3; }
-#bracket-22 { grid-column: 3; grid-row: 19 / span 3; }
+#bracket-21 { grid-column: 3; grid-row: 26 / span 3; }
+#bracket-22 { grid-column: 3; grid-row: 22 / span 3; }
 
 /* Next winners rounds */
-#bracket-23 { grid-column: 3; grid-row: 4 / span 2; }
-#bracket-24 { grid-column: 3; grid-row: 12 / span 2; }
+#bracket-23 { grid-column: 3; grid-row: 6 / span 2; }
+#bracket-24 { grid-column: 3; grid-row: 14 / span 2; }
 
-/* rest */
+/* Rest */
+#bracket-25 { grid-column: 4; grid-row: 21 / span 2; }
+#bracket-26 { grid-column: 4; grid-row: 25 / span 2; }
+#bracket-28 { grid-column: 4; grid-row: 10 / span 2; }
 
-#bracket-25 { grid-column: 4; grid-row: 18 / span 2; }
-#bracket-26 { grid-column: 4; grid-row: 22 / span 2; }
-#bracket-28 { grid-column: 4; grid-row: 8 / span 2; }
+#bracket-27 { grid-column: 5; grid-row: 23 / span 2; }
+#bracket-30 { grid-column: 5; grid-row: 9 / span 2; }
 
-#bracket-27 { grid-column: 5; grid-row: 20/ span 2; }
-#bracket-30 { grid-column: 5; grid-row: 7/ span 2; }
+#bracket-29 { grid-column: 6; grid-row: 22 / span 2; }
+#bracket-31 { grid-column: 6; grid-row: 8 / span 2; }
 
-#bracket-29 { grid-column: 6; grid-row: 19/ span 2; }
-#bracket-31 { grid-column: 6; grid-row: 6/ span 2; }
+/* Labels */
+#winner-label {
+    grid-row: 1; /* Position above the winner bracket */
+    margin-top: -20px; /* Adjust to fine-tune spacing */
+}
+
+#loser-label {
+    grid-row: 20; /* Position above the loser bracket */
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.bracket-label{
+    font-size: 1vw;
+    font-weight: bold;
+}
+
+/* General button styling for bracket */
+form input[type="submit"] {
+    background-color: #717C89; /* Grayish-blue background */
+    color: white; /* White text */
+    font-size: 0.6vw; /* Adjusted font size for proportionality */
+    border: none; /* Remove default borders */
+    border-radius: 5px; /* Rounded corners */
+    padding: 0.2vw 0.6vw; /* Padding for compact appearance */
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease; /* Smooth transitions for hover effects */
+    margin: 0.2vw; /* Slight margin for spacing */
+}
+
+/* Hover effect for buttons */
+form input[type="submit"]:hover {
+    background-color: #AF3E4D; /* Dark red for hover state */
+    transform: scale(1.05); /* Slight zoom effect */
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+}
+
+/* Focused button style */
+form input[type="submit"]:focus {
+    outline: 2px solid #1E3F20; /* Dark green outline for focus */
+    outline-offset: 2px; /* Slight offset for better visibility */
+}
+
+/* Disabled button style */
+form input[type="submit"]:disabled {
+    background-color: #cccccc; /* Light gray background for disabled state */
+    color: #666666; /* Dark gray text for disabled state */
+    cursor: not-allowed; /* Not-allowed cursor to indicate unclickable state */
+    box-shadow: none; /* Remove shadow for disabled buttons */
+}
+
