@@ -31,13 +31,24 @@
             <tr>
                 <th>Player</th>
                 <th>Total Points</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for player in group.players %}
+            <!--player name, player poinrs, select unselect button-->
             <tr>
-                <td {% if player in advancing_players %} class="highlight" {% endif %}>{{ player.dart.player }}</td>
-                <td {% if player in advancing_players %} class="highlight" {% endif %}>{{ player.total_points }}</td>
+                <td {% if player in advancing_players %} class="highlight" {% endif %}>
+                    {{ player.dart.player }}
+                </td>
+                <td {% if player in advancing_players %} class="highlight" {% endif %}>
+                    {{ player.total_points }}
+                </td>
+                <td {% if player in advancing_players %} class="highlight" {% endif %}>
+                    <form action="/tournament/change" method="GET" class="">
+                        <input type="submit" value="test">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

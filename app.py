@@ -284,9 +284,6 @@ def show_results():
     # Sort players inside each groups based on theyr points
     for group in leaderboard:
         group.players.sort(key=lambda p: p.total_points, reverse=True)
-        print(f"Group {group.name}")
-        for player in group.players:
-            print(f"{player.dart.player} - {player.total_points}")
 
     # Get the players that are advancing
     advancing_players = get_players_for_next_round(leaderboard)
@@ -317,8 +314,17 @@ def get_players_for_next_round(groups):
         # Sort remaining players by total points and take the top ones based on 'remaining_players'
         potential_advancing_player.sort(key=lambda p: p.total_points, reverse=True)
         advancing_players.extend(potential_advancing_player[:remaining_players])
-    
     return advancing_players
+
+@app.route("/tournament/change", methods=["GET"])
+def change_advancing_players():
+
+    pass
+
+    #note: i have to work with another database that stores the top 16 players
+    # that way i am able to unselect players and add new players to the database
+    # it should also not go over 16 players
+    # i need to add code that checks that it is exactky 16 under tournament/start
 
 @app.route("/tournament/start", methods=["GET"])
 def render_brackets():
@@ -344,7 +350,6 @@ def return_to_scoreboard():
 # This is to initialize the tournament matches
 def assigne_tournament_player(players):
     # Make sure there are no entries in the db
-    # note: think about a abck button but i would not
     TournamentMatch.query.delete()
     TournamentPlayer.query.delete()
     db.session.commit()
@@ -464,7 +469,6 @@ def bracket_advance(match, winner):
 
     # if there is a second match beeing played
     elif match.bracket_number == 31:            
-        print("test")
         loserplayer_id.final_rank = "2"
         loserplayer_id.rank_order = 2
         winnerplayer_id.final_rank = "1"
@@ -502,7 +506,6 @@ def bracket_advance(match, winner):
     else:
         final_rank = bracket_info.get("final_rank")
         if final_rank != None:
-            print(final_rank)
             loserplayer_id.final_rank = final_rank
             # Parse rank range for "rank_order"
             rank_order = int(final_rank.split('-')[0]) if '-' in final_rank else int(final_rank)
@@ -524,8 +527,6 @@ look into the players counter. if two or more players have the same points
 how is it decided who of them continues??
 
 if two players have the same amount of points who goes to the finale
-
-The players in the matches that are already finished can still change theyr score
 
 The start button of the first matches can still be pressed when the games are finished
 it should not be pressed if there are already 2 points in one of the two players
