@@ -106,3 +106,10 @@ python app.py
 ```
 The website will be available at http://127.0.0.1:5000/ in your browser.
 
+### 5. closing and reopening the application
+
+If the command prompt (CMD) is closed, you will need to reactivate the virtual environment (venv) as explained earlier. Without reactivating, the required libraries will not be accessible.
+
+Alternatively, to avoid this step, you can choose not to create a virtual environment and install the libraries directly on your local machine. This approach eliminates the need for reactivation but may impact your global Python environment.
+
+
