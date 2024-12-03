@@ -254,7 +254,6 @@ def show_results():
         if not match.match_finished:
             # Flash an error message if any match is not finished
             flash("Not all matches are played or finished", "error")
-
             return redirect("/elimination-round")
     
     # calculate the points for each player
@@ -278,18 +277,24 @@ def show_results():
 
     # commit the changes
     db.session.commit()
-
-    leaderboard = Group.query.all()
     
     # Sort players inside each groups based on theyr points
+    leaderboard = Group.query.all()
     for group in leaderboard:
         group.players.sort(key=lambda p: p.total_points, reverse=True)
 
     # Get the players that are advancing
     advancing_players = get_players_for_next_round(leaderboard)
+
+    assigne_tournament_player(advancing_players)
     
+    tournamentplayers = TournamentPlayer.query.all()
+
+    advancing_player_ids = {tp.player_id for tp in tournamentplayers}  # Use a set for fast lookup
+ 
+
     # Render the leaderboard page if all matches are finished
-    return render_template("first_leaderboard.html", leaderboard = leaderboard, advancing_players = advancing_players)
+    return render_template("first_leaderboard.html", leaderboard = leaderboard, advancing_players_id = advancing_player_ids)
 
 def get_players_for_next_round(groups):
     total_players_needed = 16
@@ -316,28 +321,44 @@ def get_players_for_next_round(groups):
         advancing_players.extend(potential_advancing_player[:remaining_players])
     return advancing_players
 
-@app.route("/tournament/change", methods=["GET"])
-def change_advancing_players():
+@app.route("/tournament/change/<int:player_id>/<string:player_name>", methods=["GET"])
+def change_advancing_players(player_id, player_name):
 
-    pass
+    existing_player = TournamentPlayer.query.filter_by(player_id=player_id).first()
 
-    #note: i have to work with another database that stores the top 16 players
-    # that way i am able to unselect players and add new players to the database
-    # it should also not go over 16 players
-    # i need to add code that checks that it is exactky 16 under tournament/start
+    if existing_player:
+        # If the player exists, remove them from advancing players
+        db.session.delete(existing_player)
+    else:
+        # If the player does not exist, add them, but ensure the count is less than 16
+        if TournamentPlayer.query.count() < 16:
+            new_player = TournamentPlayer(player_name=player_name, player_id=player_id)
+            db.session.add(new_player)
+        else:
+            flash("Maximum of 16 advancing players reached.", "error")
 
+    db.session.commit()
+
+    leaderboard = Group.query.all()
+    for group in leaderboard:
+        group.players.sort(key=lambda p: p.total_points, reverse=True)
+
+    tournamentplayers = TournamentPlayer.query.all()
+
+    advancing_player_ids = {tp.player_id for tp in tournamentplayers}  # Use a set for fast lookup
+
+
+    return render_template("first_leaderboard.html", leaderboard=leaderboard, advancing_players_id = advancing_player_ids)
+
+    
 @app.route("/tournament/start", methods=["GET"])
 def render_brackets():
 
-    # Get the players that advance into the Tournament
-    all_players = Group.query.all()
-    advancing_players = get_players_for_next_round(all_players)
-
-    # Put those players into the database
-    assigne_tournament_player(advancing_players)
+    TournamentMatch.query.delete()
+    advancing_players = TournamentPlayer.query.all()
     # Initialize the brackets and fill the first ones
     initialize_matches()
-    assign_fist_matches(advancing_players)
+    assign_first_matches(advancing_players)
     matches = TournamentMatch.query.all()
 
     return render_template("double_elimination.html", matches = matches)
@@ -368,7 +389,7 @@ def initialize_matches():
         db.session.add(match)
     db.session.commit()
 
-def assign_fist_matches(players):
+def assign_first_matches(players):
     for i in range(8):
         #select matches 1-8 and assige the players
         match = TournamentMatch.query.filter_by(bracket_number = i + 1).first()
@@ -515,9 +536,9 @@ def bracket_advance(match, winner):
     db.session.commit()
 
 if __name__ == '__main__':
-    #app.run(debug=True)
-    server = Server(app.wsgi_app)  # Use livereload's Server
-    server.serve(port=5000, host='127.0.0.1')
+    app.run(debug=True)
+    #server = Server(app.wsgi_app)  # Use livereload's Server
+    #server.serve(port=5000, host='127.0.0.1')
 
 
 '''

@@ -38,14 +38,14 @@
             {% for player in group.players %}
             <!--player name, player poinrs, select unselect button-->
             <tr>
-                <td {% if player in advancing_players %} class="highlight" {% endif %}>
+                <td {% if player.player_id in advancing_players_id %} class="highlight" {% endif %}>
                     {{ player.dart.player }}
                 </td>
-                <td {% if player in advancing_players %} class="highlight" {% endif %}>
+                <td {% if player.player_id in advancing_players_id %} class="highlight" {% endif %}>
                     {{ player.total_points }}
                 </td>
-                <td {% if player in advancing_players %} class="highlight" {% endif %}>
-                    <form action="/tournament/change" method="GET" class="">
+                <td>
+                    <form action="/tournament/change/{{player.player_id}}/{{player.dart.player}}" method="GET" class="">
                         <input type="submit" value="test">
                     </form>
                 </td>
