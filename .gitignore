@@ -4,3 +4,4 @@ test.db
 secret_key.txt
 instance/
 __pycache__
+venv/
