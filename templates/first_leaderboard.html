@@ -46,7 +46,7 @@
                 </td>
                 <td>
                     <form action="/tournament/change/{{player.player_id}}/{{player.dart.player}}" method="GET" class="">
-                        <input type="submit" value="test">
+                        <input type="submit" value="{% if player.player_id in advancing_players_id %}unselect{% else %}select{% endif %}">
                     </form>
                 </td>
             </tr>
