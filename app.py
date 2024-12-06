@@ -250,12 +250,13 @@ def show_results():
     matches = Match.query.all()
 
     # Check if all matches are finished
+    '''
     for match in matches:
         if not match.match_finished:
             # Flash an error message if any match is not finished
             flash("Not all matches are played or finished", "error")
             return redirect("/elimination-round")
-    
+    '''
     # calculate the points for each player
     group_players = GroupPlayer.query.all()
 
